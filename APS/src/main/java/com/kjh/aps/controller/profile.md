@@ -98,6 +98,12 @@ function modifyProfileImage(obj) {
 </pre>
 ## MyPageController
 <pre>
+@Inject
+private MyPageService mypageService;
+	
+@Resource(name="s3Properties")
+private Properties s3Properties;
+
 // 회원 닉네임 수정
 @PostMapping("/modify/nickname")
 public @ResponseBody String modifyNickname(String nickname, HttpServletRequest request) {
