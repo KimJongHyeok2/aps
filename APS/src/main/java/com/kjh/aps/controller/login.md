@@ -274,7 +274,7 @@ public void onAuthenticationSuccess(HttpServletRequest request, HttpServletRespo
 private SqlSession sqlSession;
 	
 @Override
- public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
   throws IOException, ServletException {
 
 	String errorMsg = "";
