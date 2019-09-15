@@ -125,69 +125,71 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
 </pre>
 ## CommunityMapper
 <pre>
-&lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
-  SELECT * FROM broadcaster WHERE id = #{param1}
-&lt;/select&gt;
-&lt;select id="selectBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO"&gt;
-  &lt;choose&gt;
-    &lt;when test='listType != null and listType.equals("today")'&gt;
-      SELECT brc_b_list.* FROM
-        (SELECT
-          @rownum:=@rownum+1 as no, brc_b.*
-        FROM
+<mapper namespace="community">
+  &lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
+    SELECT * FROM broadcaster WHERE id = #{param1}
+  &lt;/select&gt;
+  &lt;select id="selectBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO"&gt;
+    &lt;choose&gt;
+      &lt;when test='listType != null and listType.equals("today")'&gt;
+        SELECT brc_b_list.* FROM
+          (SELECT
+            @rownum:=@rownum+1 as no, brc_b.*
+          FROM
+            (SELECT
+              b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+              ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+            FROM
+              broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+            WHERE
+              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+         WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      &lt;/when&gt;
+      &lt;when test='listType != null and listType.equals("week")'&gt;
+        SELECT brc_b_list.* FROM
+          (SELECT
+            @rownum:=@rownum+1 as no, brc_b.*
+          FROM
+            (SELECT
+              b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+              ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+            FROM
+              broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+            WHERE
+              (b.broadcaster_id = #{id} AND b.status = 1) AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+        WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      &lt;/when&gt;
+      &lt;when test='listType != null and listType.equals("month")'&gt;
+        SELECT brc_b_list.* FROM
+          (SELECT
+            @rownum:=@rownum+1 as no, brc_b.*
+          FROM
+            (SELECT
+              b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+              ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+            FROM
+              broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+            WHERE
+              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+        WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      &lt;/when&gt;
+      &lt;otherwise&gt;
+        SELECT brc_b_list.* FROM
+          (SELECT
+            @rownum:=@rownum+1 as no, brc_b.*
+          FROM
           (SELECT
             b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
             ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-          FROM
+           FROM
             broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-          WHERE
-            (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-       WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-    &lt;/when&gt;
-    &lt;when test='listType != null and listType.equals("week")'&gt;
-      SELECT brc_b_list.* FROM
-        (SELECT
-          @rownum:=@rownum+1 as no, brc_b.*
-        FROM
-          (SELECT
-            b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
-            ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-          FROM
-            broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-          WHERE
-            (b.broadcaster_id = #{id} AND b.status = 1) AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-      WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-    &lt;/when&gt;
-    &lt;when test='listType != null and listType.equals("month")'&gt;
-      SELECT brc_b_list.* FROM
-        (SELECT
-          @rownum:=@rownum+1 as no, brc_b.*
-        FROM
-          (SELECT
-            b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
-            ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-          FROM
-            broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-          WHERE
-            (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-      WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-    &lt;/when&gt;
-    &lt;otherwise&gt;
-      SELECT brc_b_list.* FROM
-        (SELECT
-          @rownum:=@rownum+1 as no, brc_b.*
-        FROM
-        (SELECT
-          b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
-          ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-         FROM
-          broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-         WHERE
-          b.broadcaster_id = #{id} AND b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-      WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-    &lt;/otherwise&gt;
-  &lt;/choose&gt;
-&lt;/select&gt;
+           WHERE
+            b.broadcaster_id = #{id} AND b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+        WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      &lt;/otherwise&gt;
+    &lt;/choose&gt;
+  &lt;/select&gt;
+</mapper>
 </pre>
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
