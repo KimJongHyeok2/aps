@@ -3,9 +3,6 @@
 
 ## SecurityContext
 <pre>
-&lt;context:property-placeholder
-location="classpath:db.properties"/&gt;
-
 &lt;security:http use-expressions="true">
 	&lt;security:form-login login-page="/login"
 	username-parameter="username"
@@ -75,7 +72,10 @@ location="classpath:db.properties"/&gt;
 
 &lt;context:component-scan base-package="com.kjh.aps.security"/&gt;
 </pre>
-## Controller
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/spring/appServlet/security-context.xml">SecurityContext.xml</a>
+</pre>
+## LoginController
 <pre>
 // 로그인 페이지
 @RequestMapping("")
@@ -89,7 +89,10 @@ public String login(HttpSession session, Model model) {
   return "login/login";
 }
 </pre>
-## CustomerUserDetailService
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/LoginController.java">LoginController.java</a>
+</pre>
+## CustomUserDetailService
 <pre>
 @Inject
 private SqlSession sqlSession;
@@ -134,6 +137,9 @@ public void updateSocialUserPassword(int id) throws RuntimeException {
     LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
     dao.updateSocialUserPassword(map);
 }
+</pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomUserDetailsService.java">CustomUserDetailsService.java</a>
 </pre>
 ## CustomAuthenticationProvider
 <pre>
@@ -181,6 +187,9 @@ public Authentication authenticate(Authentication auth) throws AuthenticationExc
   return token;
 }
 </pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationProvider.java">CustomAuthenticationProvider.java</a>
+</pre>
 ## CustomAuthenticationSuccessHandler
 <pre>
 @Inject
@@ -217,6 +226,9 @@ public void onAuthenticationSuccess(HttpServletRequest request, HttpServletRespo
 		
 }
 </pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationSuccessHandler.java">CustomAuthenticationSuccessHandler.java</a>
+</pre>
 ## CustomAuthenticationFailureHandler
 <pre>
 @Inject
@@ -247,20 +259,10 @@ private SqlSession sqlSession;
 
 }
 </pre>
-## LoginDAO
 <pre>
-public interface LoginDAO {
-  public CustomUserDetails selectUserByUsername(String username);
-  public Map<String, String> selectUserInfoByMap(Map<String, String> map);
-  public Integer selectUserTypeByMap(Map<String, String> map);
-  public int updatePasswordByMap(Map<String, String> map);
-  public int updateUserStatus(Map<String, String> map);
-  public int insertUserLog(Map<String, String> map);
-  public Map<String, String> selectUserBanInfoByUsername(String username);
-  public int updateSocialUserPassword(Map<String, String> map);
-}
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationFailureHandler.java">CustomAuthenticationFailureHandler.java</a>
 </pre>
-## LoginMapper
+## LoginDAO
 <pre>
 &lt;mapper namespace="com.kjh.aps.persistent.LoginDAO"&gt;
   &lt;select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails"&gt;
@@ -298,4 +300,7 @@ public interface LoginDAO {
     UPDATE user SET password = #{password} WHERE id = #{id}
   &lt;/update&gt;
 &lt;/mapper&gt;
+</pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/LoginDAO.xml">LoginDAO.xml</a>
 </pre>
