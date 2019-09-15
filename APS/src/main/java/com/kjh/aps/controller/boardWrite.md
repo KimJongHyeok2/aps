@@ -18,10 +18,6 @@
 <pre>
 @Inject
 private CommunityService communityService;
-private final int BOARD_PAGEBLOCK = 5;
-private final int BOARD_POPULAR_ORDER = 20;
-private final int COMMENT_PAGEBLOCK = 5;
-private final int COMMENT_POPULAR_ORDER = 20;
 
 @Resource(name="s3Properties")
 private Properties s3Properties;
