@@ -77,6 +77,11 @@
 </pre>
 ## LoginController
 <pre>
+@Inject
+private NaverLoginBO naverLoginBO;
+@Inject
+private GoogleLoginBO googleLoginBO;
+
 // 로그인 페이지
 @RequestMapping("")
 public String login(HttpSession session, Model model) {
@@ -262,7 +267,7 @@ private SqlSession sqlSession;
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationFailureHandler.java">CustomAuthenticationFailureHandler.java</a>
 </pre>
-## LoginDAO
+## LoginMapper
 <pre>
 &lt;mapper namespace="com.kjh.aps.persistent.LoginDAO"&gt;
   &lt;select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails"&gt;
