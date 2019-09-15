@@ -22,6 +22,30 @@ private CommunityService communityService;
 @Resource(name="s3Properties")
 private Properties s3Properties;
 
+// 방송인 커뮤니티 게시판 글 작성 페이지
+@GetMapping("/board/write")
+public String boardWrite(String id, @RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+		
+  // 파라미터 유효성 검사
+  if(id == null || id.length() == 0) {
+    return "confirm/not_exist";
+  } else {
+    try {
+      BroadcasterDTO broadcaster = communityService.selectBroadcasterById(id); // 해당 커뮤니티 방송인 정보
+				
+      if(broadcaster == null) { // 잘못된 방송인 아이디 값이 넘어왔다면
+        return "confirm/not_exist";
+      }
+				
+      model.addAttribute("broadcaster", broadcaster);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+		
+  return "community/board/board_write";
+}
+	
 // 방송인 커뮤니티 게시판 글 작성
 @PostMapping("/board/writeOk")
 public String boardWriteOk(BoardDTO dto, BindingResult result,
