@@ -313,9 +313,6 @@ private SqlSession sqlSession;
   &lt;select id="selectUserTypeByMap" resultType="Integer"&gt;
     SELECT type FROM user WHERE name = #{name} AND username = #{username} AND email = #{email}
   &lt;/select&gt;
-  &lt;update id="updatePasswordByMap"&gt;
-    UPDATE user SET password = #{tempPassword} WHERE name = #{name} AND username = #{username} AND email = #{email}
-  &lt;/update&gt;
   &lt;update id="updateUserStatus"&gt;
     &lt;choose&gt;
       &lt;when test='type != null and type.equals("unlock")'&gt;
@@ -335,9 +332,6 @@ private SqlSession sqlSession;
     WHERE
       user_id = (SELECT id FROM user WHERE username = #{param1})
   &lt;/select&gt;
-  &lt;update id="updateSocialUserPassword"&gt;
-    UPDATE user SET password = #{password} WHERE id = #{id}
-  &lt;/update&gt;
 &lt;/mapper&gt;
 </pre>
 <pre>
