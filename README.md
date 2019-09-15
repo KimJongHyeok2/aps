@@ -23,8 +23,25 @@
 <span>Amazon S3</span>
 <span>WebSocket</span>
 </pre>
-## Youtube / Demo
+## 주요기능
 <ul>
-  <li><a href="https://youtu.be/mvxU--K1SjM">Youtube</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/login.md">로그인</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/sociallogin.md">소셜 로그인</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/profile.md">프로필 수정</a></li>
+  <li>
+    BJ 게시판
+    <ul>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardWrite.md">등록</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/oardList.md">목록</a</li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardUpdate.md">수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardDelete.md">삭제</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardView.md">상세보기</a></li>
+    </ul>
+  </li>
+</ul>
+
+## YouTube / Demo
+<ul>
+  <li><a href="https://youtu.be/mvxU--K1SjM">YouTube</a></li>
   <li><a href="https://iamiportfolio.com/APS">Demo</a></li>
 </ul>
