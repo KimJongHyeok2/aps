@@ -355,6 +355,9 @@ if(validation.supports(dto.getClass())) {
 </pre>
 ## JoinServiceImpl
 <pre>
+@Inject
+private JoinDAO dao;
+
 @Override
 public SocialLoginDTO selectUserBySocialLoginDTO(SocialLoginDTO dto) throws Exception { // 소셜 로그인
 		
