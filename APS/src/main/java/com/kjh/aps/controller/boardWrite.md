@@ -1,4 +1,5 @@
 ## Demo
+<h5>회원 전용 BJ 게시판 글 등록입니다.</h5?
 <img src="https://user-images.githubusercontent.com/47962660/64926988-8062ab00-d83f-11e9-8660-9328352e6f4b.gif"/>
 
 ## ServletContext
