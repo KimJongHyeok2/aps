@@ -4,6 +4,23 @@
 <h5>구글 로그인</h5>
 <img src="https://user-images.githubusercontent.com/47962660/64925032-d0cd0f00-d825-11e9-9635-47b1b57b1b4b.gif"/>
 
+## Login(Client)
+<pre>
+function socialLoginPopUp(url) {
+  var pop = window.open(url, "pop", "width=600,height=600, scrollbars=yes, resizable=yes");
+}
+
+&lt;div class="social-wrapper"&gt;
+  &lt;div class="title-box margin-top">간편하게 로그인해보세요!&lt;/div&gt;
+    &lt;div class="social-box margin-top"&gt;
+      &lt;img class="social-login naver" onclick="socialLoginPopUp('${naverUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/naver.PNG"&gt;
+      &lt;img class="social-login" onclick="socialLoginPopUp('${googleUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/google.png"/&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/login/login.jsp">login.jsp</a>
+</pre>
 ## ServletContext
 <pre>
 &lt;!-- Naver Login --&gt;
@@ -560,7 +577,7 @@ private SqlSession sqlSession;
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationFailureHandler.java">CustomAuthenticationFailureHandler.java</a>
 </pre>
-## LoginDAO
+## LoginMapper
 <pre>
 &lt;mapper namespace="com.kjh.aps.persistent.LoginDAO"&gt;
   &lt;select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails"&gt;
@@ -572,9 +589,6 @@ private SqlSession sqlSession;
   &lt;select id="selectUserTypeByMap" resultType="Integer"&gt;
     SELECT type FROM user WHERE name = #{name} AND username = #{username} AND email = #{email}
   &lt;/select&gt;
-  &lt;update id="updatePasswordByMap"&gt;
-    UPDATE user SET password = #{tempPassword} WHERE name = #{name} AND username = #{username} AND email = #{email}
-  &lt;/update&gt;
   &lt;update id="updateUserStatus"&gt;
     &lt;choose&gt;
       &lt;when test='type != null and type.equals("unlock")'&gt;
