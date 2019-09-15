@@ -125,7 +125,7 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
 </pre>
 ## CommunityMapper
 <pre>
-<mapper namespace="community">
+&lt;mapper namespace="community"&gt;
   &lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
     SELECT * FROM broadcaster WHERE id = #{param1}
   &lt;/select&gt;
@@ -189,7 +189,7 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
       &lt;/otherwise&gt;
     &lt;/choose&gt;
   &lt;/select&gt;
-</mapper>
+&lt;/mapper&gt;
 </pre>
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
