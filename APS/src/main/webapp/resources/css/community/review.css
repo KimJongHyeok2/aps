@@ -1,0 +1,366 @@
+@charset "UTF-8";
+/* 민심평가 페이지 CSS */
+.user-wrapper {
+	border-bottom: 1px solid #EAEAEA;
+}
+.user-wrapper .user-inner {
+	max-width: 1000px;
+	margin: auto;
+}
+.user-wrapper .user-inner .user-inner-box {
+	margin: 10px 0;
+}
+.user-wrapper .user-inner .user-inner-box .container {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.user-wrapper .user-inner .user-inner-box .container .row {
+	margin: 0;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img {
+	position: relative;
+	padding: 0;
+	text-align: center;
+	border-radius: 5px;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img .fa-user {
+	color: #D5D5D5;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img .img-fluid {
+	width: 100%;
+	max-height: 180px;
+	border: 1px solid #EAEAEA;
+	border-radius: 5px;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img .medal {
+	position: absolute;
+	top: 0;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img .medal .best {
+	padding: 5px;
+	border: 1px solid #0dd160;
+	border-radius: 5px;
+	background-color: #0dd160;
+	color: white;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-img .medal .partner {
+	padding: 5px;
+	border: 1px solid #693bed;
+	border-radius: 5px;
+	background-color: #693bed;
+	color: white;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info {
+	display: flex;
+	justify-content: space-between;
+	align-self: stretch;
+	flex-flow: column wrap;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-name {
+	font-family: "나눔스퀘어";
+	font-size: 20pt;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-other {
+	display: flex;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-other .other-button {
+	margin-right: 5px;
+	padding: 5px;
+	border: 1px solid #2e6afd;
+	border-radius: 5px;
+	background-color: #2e6afd;
+	color: white;
+	cursor: pointer;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-other .other-button.users {
+	cursor: default;
+}
+.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-other .other-button:last-child {
+	margin-right: 0;
+}
+.stats-wrapper .stats-inner {
+	max-width: 1000px;
+	margin: auto;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row {
+	margin: 0;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box {
+	padding: 0;
+	margin: 0;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content {
+	margin-top: 10px;
+	margin-right: 10px;
+	border: 1px solid #D5D5D5;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content.last-stat {
+	margin-right: 0;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .title {
+	padding: 5px;
+	border-bottom: 1px solid #D5D5D5;
+	font-family: "나눔스퀘어";
+	font-size: 15pt;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg {
+	padding: 5px;
+	text-align: right;
+	font-size: 15pt;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg i:not(.fa-star) {
+	display: none;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg i.on {
+	display: inline-block;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg .fa-minus {
+	color: gray;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg .fa-caret-square-up {
+	color: #0545B1;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg .fa-caret-square-down {
+	color: #F15F5F;
+}
+.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg .fa-star {
+	color: #F2CB61;
+}
+.chart-wrapper .chart-inner {
+	max-width: 1000px;
+	margin: auto;
+}
+.chart-wrapper .chart-inner .chart-inner-box {
+	margin-top: 10px;
+	border: 1px solid #D5D5D5;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title {
+	display: flex;
+	justify-content: space-between;
+	padding: 5px;
+	border-bottom: 1px solid #D5D5D5;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box, .data-type-box {
+	display: flex;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box {
+	margin-right: 5px;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box div {
+	width: 50px;
+	padding: 5px 0;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	border-right: none;
+	cursor: pointer;
+	transition-property: background-color, color;
+	transition-duration: 0.5s;
+	color: gray;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box div:last-child {
+	border-right: 1px solid #D5D5D5;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box div.active {
+	background-color: rgba(246, 246, 246, 0.4);
+	color: dimgray;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box div:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .data-type-box div {
+	width: 50px;
+	padding: 5px 0;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	border-right: none;
+	cursor: pointer;
+	transition-property: background-color, color;
+	transition-duration: 0.5s;
+	color: gray;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .data-type-box div:last-child {
+	border-right: 1px solid #D5D5D5;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .data-type-box div.active {
+	background-color: rgba(246, 246, 246, 0.4);
+	color: dimgray;
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .data-type-box div:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.chart-wrapper .chart-inner .chart-inner-box .chart-box .content {
+	padding: 5px;
+}
+.review-write-wrapper .review-write-inner {
+	max-width: 1000px;
+	margin: auto;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box {
+	margin-top: 10px;
+	border: 1px solid #D5D5D5;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box.not {
+	border: none;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated {
+	text-align: center;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .info-circle {
+	width: 70px;
+	height: 70px;
+	line-height: 68px;
+	margin: auto;
+	margin-bottom: 10px;
+	text-align: center;
+	border: 1px solid #0545B1;
+	border-radius: 50%;
+	color: #0545B1;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .info-circle i {
+	vertical-align: middle;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .text {
+	text-align: center;
+	font-family: "나눔스퀘어";
+	font-size: 14pt;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-input-box {
+	border-bottom: 1px solid #D5D5D5;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-input-box textarea {
+	width: 100%;
+	min-height: 100px;
+	padding: 10px;
+	border: none;
+	outline: 0;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .rate {
+	flex-grow: 1;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .rate div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .rate #counter {
+	padding: 0 5px;
+	border: 1px solid #D5D5D5;
+	border-radius: 5px;
+	vertical-align: -2px;
+	color: gray;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .button {
+	flex-grow: 1;
+	text-align: right;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .button .review-button {
+	padding: 5px;
+	border: 1px solid #D5D5D5;
+	border-radius: 5px;
+	background-color: white;
+	color: gray;
+	transition-property: background-color;
+	transition-duration: 0.5s;
+}
+.review-write-wrapper .review-write-inner .review-write-inner-box .review-other-box .button .review-button:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.comment-list-wrapper .comment-list-inner .comment-list-inner-box {
+	margin: 10px 0;
+}
+.comment-pagination-wrapper .comment-pagination-inner .comment-pagination-inner-box {
+	margin-bottom: 10px !important;
+}
+.cl-default.empty-comment {
+	border: none !important;
+}
+.chart-spinner {
+	display: none;
+}
+.chart-spinner.on {
+	display: block;
+}
+
+/* 민싱평가 페이지 반응형 */
+@media(max-width:1000px) {
+	.user-wrapper .user-inner .user-inner-box {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.stats-wrapper .stats-inner .stats-inner-box {
+		margin: 0 10px;
+	}
+	.chart-wrapper .chart-inner .chart-inner-box {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.review-write-wrapper .review-write-inner .review-write-inner-box {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+}
+@media(max-width:1000px) {
+	.user-wrapper .user-inner .user-inner-box .container .row .profile-img .fa-user {
+		font-size: 7em;
+	}
+}
+@media(max-width:767px) {
+	.user-wrapper .user-inner .user-inner-box .container .row .profile-img .img-fluid {
+		max-height: 130px;
+	}
+}
+@media(max-width:575px) {
+	.user-wrapper .user-inner .user-inner-box .container .row .profile-img .img-fluid {
+		max-height: 110px;
+	}
+	.user-wrapper .user-inner .user-inner-box .container .row .profile-img .fa-user {
+		font-size: 5em;
+	}
+	.user-wrapper .user-inner .user-inner-box .container .row .profile-info .profile-info-name {
+		font-size: 20px;
+	}
+	.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content {
+		margin-right: 0;
+		border-right: none;
+	}
+	.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box:last-child .stat-content {
+		border-right: 1px solid #D5D5D5;
+	}
+	.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .title {
+		font-size: 12pt;
+	}
+	.stats-wrapper .stats-inner .stats-inner-box .container .row .stat-box .stat-content .stat-avg {
+		font-size: 12pt;
+	}
+	.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .chart-type-box div {
+		width: 40px;
+	}
+	.chart-wrapper .chart-inner .chart-inner-box .chart-box .title .data-type-box div {
+		width: 40px;
+	}
+	.review-write-wrapper .review-write-inner .review-write-inner-box .review-input-box textarea {
+		font-size: 14px;
+	}
+	.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .info-circle {
+		width: 50px;
+		height: 50px;
+		line-height: 48px;
+	}
+	.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .info-circle i {
+		font-size: 25px;
+	}
+	.review-write-wrapper .review-write-inner .review-write-inner-box .review-not-authenticated .text {
+		font-size: 16px;
+	}
+}

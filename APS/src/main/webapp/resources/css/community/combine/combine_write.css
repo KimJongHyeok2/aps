@@ -1,0 +1,173 @@
+@charset "UTF-8";
+/* 게시판 글 작성 페이지 CSS */
+html { overflow-x: hidden; }
+:root {
+	--ck-color-base-foreground: white !important;
+	--ck-color-base-border: #D5D5D5 !important;
+	--ck-color-base-focus: #0545B1 !important;
+	--ck-color-base-active: #0545B1 !important;
+	--ck-color-base-active-focus: #0545B1 !important;
+	--ck-color-focus-border: #0545B1 !important;
+	--ck-color-focus-shadow: rgba(246, 246, 246, 0.4) !important;
+	--ck-color-focus-disabled-shadow: rgba(246, 246, 246, 0.4) !important;
+	--ck-color-shadow-drop: white !important;
+	--ck-color-shadow-drop-active: white !important;
+	--ck-color-shadow-inner: white !important;
+}
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .container {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content {
+	margin-top: 20px;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row {
+	margin: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input {
+	padding: 0;	
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input:first-child input {
+	border-right: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #D5D5D5;	
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input input:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #subject {
+	width: 100%;
+	height: 50px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	border-bottom: 1px solid transparent;
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #subject:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #content {
+	width: 100%;
+	height: 50px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	outline: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box * {
+	border-radius: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #content:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .input-info {
+	margin: 10px 0;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	font-size: 14px;
+	background-color: rgba(246, 246, 246, 0.4);
+	color: dimgray;
+}
+.content-wrapper .content-inner .content-inner-box .container .input-info ul {
+	margin: 0;
+	padding-left: 20px;
+}
+.content-wrapper .content-inner .content-inner-box .container .function {
+	margin-top: 10px;
+	text-align: right;
+}
+.content-wrapper .content-inner .content-inner-box .container .function .aps-button {
+	width: 50px;
+	padding: 5px 0;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .container .function .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.ck.ck-editor__editable[role='textbox'] {
+	min-height: 500px;
+	padding: 10px;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.ck.ck-editor__editable[role='textbox'] p {
+	margin: 0 !important;
+}
+
+/* 게시판 글 작성 페이지 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 0;
+		margin: 10px 0;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input:first-child input[type="text"] {
+		border-left: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input:last-child input[type="text"] {
+		border-right: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #subject {
+		border-left: none;
+		border-right: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #subject:focus {
+		border-left: none;
+		border-right: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .input-info {
+		border-left: none;
+		border-right: none;	
+	}
+	.ck-toolbar {
+		border-left: none !important;
+		border-right: none !important;
+	}
+	.ck.ck-editor__editable[role='textbox'] {
+		border-left: none !important;
+		border-right: none !important;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .function {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box .row .input {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .write-content .input-box #subject {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .input-info {
+		font-size: 12px;
+	}
+	.ck.ck-editor__editable[role='textbox'] {
+		font-size: 14px;
+	}
+}

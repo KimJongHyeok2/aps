@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:annotation-config/>
+	<context:property-placeholder
+	location="classpath:db.properties"/>
+
+	<security:http use-expressions="true">
+		<security:form-login login-page="/login"
+		username-parameter="username"
+		password-parameter="password"
+		login-processing-url="/loginOk"
+		authentication-failure-handler-ref="customAuthenticationFailureHandler"
+		authentication-success-handler-ref="customAuthenticationSuccessHandler"
+		default-target-url="/"
+		/>
+		<security:intercept-url pattern="/" requires-channel="https" access="permitAll"/>
+		<security:intercept-url pattern="/mypage/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/community/board/write" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/community/board/writeOk" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/community/board/modify/**" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/community/board/modifyOk" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/community/board/deleteOk" access="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/customerService/write" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/customerService/writeOk" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/customerService/modify" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/customerService/modifyOk" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/customerService/deleteOk" access="hasRole('ROLE_ADMIN')"/>
+		<security:logout logout-url="/logout" logout-success-url="/login" invalidate-session="true"/>
+		<security:access-denied-handler error-page="/access_denied"/>
+		<security:session-management>
+			<security:concurrency-control max-sessions="1" expired-url="/expired_login"/>
+		</security:session-management>
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider ref="customAuthenticationProvider"/>
+		<security:authentication-provider user-service-ref="customUserDetailService"/>
+	</security:authentication-manager>
+	
+	<security:http-firewall ref="customLoggingHttpFirewall"/>
+	
+	<bean name="customAuthenticationProvider" class="com.kjh.aps.security.CustomAuthenticationProvider"/>
+	<bean name="customUserDetailService" class="com.kjh.aps.security.CustomUserDetailsService"/>
+	<bean name="customAuthenticationFailureHandler" class="com.kjh.aps.security.CustomAuthenticationFailureHandler"/>
+	<bean name="customAuthenticationSuccessHandler" class="com.kjh.aps.security.CustomAuthenticationSuccessHandler"/>
+	<bean name="customLoggingHttpFirewall" class="com.kjh.aps.security.CustomLoggingHttpFirewall"/>
+
+	<!-- DataSource -->
+	<bean name="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${db.driver}"/>
+		<property name="url" value="${db.url}"/>
+		<property name="username" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+		
+		<property name="initialSize" value="20"/>
+		<property name="maxTotal" value="20"/>
+		<property name="maxIdle" value="20"/>
+		<property name="minIdle" value="20"/>
+		
+		<property name="testOnBorrow" value="false"/>
+		<property name="testOnReturn" value="false"/>
+	</bean>
+
+	<!-- JdbcTemplate -->
+	<bean name="template" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- SqlSession -->
+	<bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="mapperLocations" value="classpath:com/kjh/aps/mapper/*.xml"/>
+	</bean>
+	
+	<bean name="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+
+	<context:component-scan base-package="com.kjh.aps.security"/>
+
+</beans>

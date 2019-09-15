@@ -1,0 +1,1164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="community">
+	<select id="selectBroadcasterList" resultType="com.kjh.aps.domain.BroadcasterDTO" parameterType="String">
+ 		<choose>
+			<when test='_parameter != null and _parameter.equals("group")'>
+				SELECT * FROM broadcaster WHERE type = 'group' ORDER BY nickname ASC
+			</when>
+			<when test='_parameter != null and _parameter.equals("issue")'>
+				SELECT * FROM broadcaster WHERE type = 'issue' ORDER BY nickname ASC
+			</when>
+			<otherwise>
+				SELECT * FROM broadcaster WHERE type = 'bj' ORDER BY nickname ASC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectBroadcasterByMap" resultType="com.kjh.aps.domain.BroadcasterDTO">
+		<choose>
+			<when test='type != null and type.equals("bj")'>
+				SELECT b.* FROM (SELECT * FROM broadcaster WHERE type = 'bj') b WHERE b.nickname like UPPER(CONCAT('%', #{nickname}, '%')) OR b.nickname like LOWER(CONCAT('%', #{nickname}, '%'))
+			</when>
+			<when test='type != null and type.equals("group")'>
+				SELECT b.* FROM (SELECT * FROM broadcaster WHERE type = 'group') b WHERE b.nickname like UPPER(CONCAT('%', #{nickname}, '%')) OR b.nickname like LOWER(CONCAT('%', #{nickname}, '%'))
+			</when>
+			<when test='type != null and type.equals("issue")'>
+				SELECT b.* FROM (SELECT * FROM broadcaster WHERE type = 'issue') b WHERE b.nickname like UPPER(CONCAT('%', #{nickname}, '%')) OR b.nickname like LOWER(CONCAT('%', #{nickname}, '%'))
+			</when>
+		</choose>
+	</select>
+	<select id="selectBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test='listType != null and listType.equals("today")'>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+				        WHERE
+							(b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType != null and listType.equals("week")'>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+				        WHERE
+							(b.broadcaster_id = #{id} AND b.status = 1) AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType != null and listType.equals("month")'>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+				        WHERE
+							(b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+				        WHERE
+							b.broadcaster_id = #{id} AND b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO">
+		SELECT * FROM broadcaster WHERE id = #{param1}
+	</select>
+	<insert id="insertBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		<choose>
+			<when test="board_type != null">
+				<choose>
+					<when test='board_type.equals("non")'>
+						INSERT INTO combine_board(nickname, password, ip, subject, content, image_flag, media_flag, type)
+						VALUE(#{nickname}, #{password}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag}, #{board_type})
+					</when>
+					<when test='board_type.equals("user") and user_id != 0'>
+						INSERT INTO combine_board(user_id, nickname, profile, level, ip, subject, content, image_flag, media_flag, user_type, type)
+						VALUE(#{user_id}, #{nickname}, #{profile}, #{level}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag}, #{userType}, #{board_type})
+					</when>
+				</choose>
+			</when>
+			<otherwise>
+				INSERT INTO broadcaster_board(broadcaster_id, user_id, ip, subject, content, image_flag, media_flag)
+				VALUE(#{broadcaster_id}, #{user_id}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag})
+			</otherwise>
+		</choose>
+	</insert>
+	<select id="selectBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<![CDATA[
+			SELECT
+				brc_b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+				(SELECT min(n.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) n WHERE n.id > #{id}) as next_id,
+	            (SELECT max(p.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) p WHERE p.id < #{id}) as prev_id,
+				(SELECT ns.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ns WHERE ns.id = (SELECT min(n.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) n WHERE n.id > #{id})) as next_subject,
+            	(SELECT ps.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ps WHERE ps.id = (SELECT max(p.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) p WHERE p.id < #{id})) as prev_subject,
+            	(SELECT b.type FROM (SELECT * FROM broadcaster_board_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_board_id = #{id} AND (b.user_id = #{user_id} OR b.ip = #{ip})) type,
+            	((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = #{id} AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = #{id}) AND status = 1)) commentCount
+			FROM
+				(SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) brc_b INNER JOIN user u ON brc_b.user_id = u.id
+			WHERE brc_b.id = #{id} AND brc_b.status = 1
+		]]>
+	</select>
+	<select id="selectBoardWriteCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType != null and listType.equals("today")'>
+				SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order})
+			</when>
+			<when test='listType != null and listType.equals("week")'>
+				SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order})
+			</when>
+			<when test='listType != null and listType.equals("month")'>
+				SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order})
+			</when>
+			<otherwise>
+				SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id} AND status = 1) 
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectSearchBoardListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test="searchType == 1">
+				<choose>
+					<when test='listType != null and listType.equals("today")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+									((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+						        WHERE
+									(b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<when test='listType != null and listType.equals("week")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+									((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+						        WHERE
+									(b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<when test='listType != null and listType.equals("month")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+									((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+						        WHERE
+									(b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<otherwise>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+									((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+						        WHERE
+									(b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+						WHERE
+							(b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+						ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectSearchBoardCountByMap" resultType="Integer">
+		<choose>
+			<when test="searchType == 1">
+				<choose>
+					<when test='listType != null and listType.equals("today")'>
+						SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((up - down) >= #{order}))
+					</when>
+					<when test='listType != null and listType.equals("week")'>
+						SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((up - down) >= #{order}))
+					</when>
+					<when test='listType != null and listType.equals("month")'>
+						SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((up - down) >= #{order}))
+					</when>
+					<otherwise>
+						SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+			</otherwise>
+		</choose>
+	</select>
+	<update id="updateBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO">
+		UPDATE broadcaster_board SET ip = #{ip}, subject = #{subject}, content = #{content}, image_flag = #{image_flag}, media_flag = #{media_flag} WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND user_id = #{user_id} AND status = 1
+	</update>
+	<select id="selectBoardWriteUserIdByMap" resultType="Integer">
+		SELECT b.user_id FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.id = #{id} AND status = 1
+	</select>
+	<update id="deleteBoardWrite">
+		UPDATE broadcaster_board SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<update id="updateBoardWriteView">
+		UPDATE broadcaster_board SET view = view + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
+	</update>
+	<select id="selectBoardWriteRecommendHistoryTypeByMap" resultType="Integer">
+		SELECT b.type FROM (SELECT * FROM broadcaster_board_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_board_id = #{id} AND (b.user_id = #{user_id} OR b.ip = #{ip})
+	</select>
+	<update id="updateBoardWriteRecommend">
+		<if test='type.equals("up")'>
+			UPDATE broadcaster_board SET up = up + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
+		</if>
+		<if test='type.equals("down")'>
+			UPDATE broadcaster_board SET down = down + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
+		</if>
+	</update>
+	<insert id="insertBoardWriteRecommendHistory">
+		<if test='type.equals("up")'>
+			INSERT INTO broadcaster_board_recommend_history(broadcaster_id, broadcaster_board_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 1)
+		</if>
+		<if test='type.equals("down")'>
+			INSERT INTO broadcaster_board_recommend_history(broadcaster_id, broadcaster_board_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 2)
+		</if>
+	</insert>
+	<insert id="insertBoardWriteComment" parameterType="com.kjh.aps.domain.CommentDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO broadcaster_board_comment(broadcaster_board_id, user_id, ip, content) VALUES(#{broadcaster_board_id}, #{user_id}, #{ip}, #{content})
+	</insert>
+	<select id="selectBoardWriteCommentListByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id = c.id AND status = 1) replyCount,
+								(SELECT type FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id = c.id AND (user_id = #{user_id} OR ip = #{ip})) type
+							FROM
+								broadcaster_board_comment c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							((brc_b_c.broadcaster_board_id = #{broadcaster_board_id} AND brc_b_c.status = 1) AND ((brc_b_c.up - brc_b_c.down) >= #{order})) OR ((brc_b_c.broadcaster_board_id = #{broadcaster_board_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0) AND ((brc_b_c.up - brc_b_c.down) >= #{order})) ORDER BY (brc_b_c.up - brc_b_c.down) DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id = c.id AND status = 1) replyCount,
+								(SELECT type FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id = c.id AND (user_id = #{user_id} OR ip = #{ip})) type
+							FROM
+								broadcaster_board_comment c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_board_id = #{broadcaster_board_id} AND brc_b_c.status = 1) OR (brc_b_c.broadcaster_board_id = #{broadcaster_board_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0) ORDER BY brc_b_c.id DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectBoardWriteCommentCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_board_comment cr WHERE cr.broadcaster_board_id = #{broadcaster_board_id}) brc_cr
+				WHERE ((brc_cr.status = 1) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0)) AND (brc_cr.up - brc_cr.down) >= #{order}
+			</when>
+			<otherwise>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_board_comment cr WHERE cr.broadcaster_board_id = #{broadcaster_board_id}) brc_cr
+				WHERE (brc_cr.status = 1) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0)
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insertBoardWriteCommentReply" parameterType="com.kjh.aps.domain.CommentReplyDTO">
+		INSERT INTO broadcaster_board_comment_reply(broadcaster_board_comment_id, user_id, ip, content) VALUE(#{broadcaster_board_comment_id}, #{user_id}, #{ip}, #{content})
+	</insert>
+	<select id="selectBoardWriteCommentReplyListByMap" resultType="com.kjh.aps.domain.CommentReplyDTO">
+		SELECT brc_b_cr_list.* FROM
+			(SELECT
+				@rownum:=@rownum+1 as no, brc_b_cr.*
+			FROM
+				(SELECT
+					cr.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType
+				FROM
+					broadcaster_board_comment_reply cr INNER JOIN user u ON cr.user_id = u.id
+				WHERE
+					cr.broadcaster_board_comment_id = #{broadcaster_board_comment_id} AND cr.status = 1 ORDER BY cr.id ASC) brc_b_cr, (SELECT @rownum:=0) rownum) brc_b_cr_list
+		WHERE brc_b_cr_list.no BETWEEN #{page} AND #{row}
+	</select>
+	<select id="selectBoardWriteCommentReplyCountByBoardCommentId" resultType="Integer">
+		SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id = #{param1} AND status = 1
+	</select>
+	<select id="selectBoardWriteCommentByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		SELECT * FROM broadcaster_board_comment WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND status = 1
+	</select>
+	<update id="updateBoardWriteComment">
+		UPDATE broadcaster_board_comment SET ip = #{ip}, content = #{content} WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND user_id = #{user_id} AND status = 1
+	</update>
+	<update id="deleteBoardWriteComment">
+		UPDATE broadcaster_board_comment SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<select id="selectBoardWriteCommentUserIdByMap" resultType="Integer">
+		SELECT user_id FROM broadcaster_board_comment WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND status = 1
+	</select>
+	<select id="selectBoardWriteCommentReplyUserIdByMap" resultType="Integer">
+		SELECT user_id FROM broadcaster_board_comment_reply WHERE (broadcaster_board_comment_id = #{broadcaster_board_comment_id}) AND id = #{id} AND status = 1
+	</select>
+	<update id="deleteBoardWriteCommentReply">
+		UPDATE broadcaster_board_comment_reply SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_board_comment_id = #{broadcaster_board_comment_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<select id="selectBoardWriteCommentRecommendHistoryTypeByMap" resultType="Integer">
+		SELECT b.type FROM (SELECT * FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id = #{id}) b WHERE b.user_id = #{user_id} OR b.ip = #{ip}
+	</select>
+	<update id="updateBoardWriteCommentRecommend">
+		<if test='type.equals("up")'>
+			UPDATE broadcaster_board_comment SET up = up + 1 WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND status = 1
+		</if>
+		<if test='type.equals("down")'>
+			UPDATE broadcaster_board_comment SET down = down + 1 WHERE (broadcaster_board_id = #{broadcaster_board_id}) AND id = #{id} AND status = 1
+		</if>
+	</update>
+	<insert id="insertBoardWriteCommentRecommendHistory">
+		<if test='type.equals("up")'>
+			INSERT INTO broadcaster_board_comment_recommend_history(broadcaster_board_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 1)
+		</if>
+		<if test='type.equals("down")'>
+			INSERT INTO broadcaster_board_comment_recommend_history(broadcaster_board_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 2)
+		</if>
+	</insert>
+	<insert id="insertBroadcasterReview" parameterType="com.kjh.aps.domain.CommentDTO">
+		INSERT INTO broadcaster_review(broadcaster_id, user_id, ip, gp, content) VALUES(#{broadcaster_id}, #{user_id}, #{ip}, #{gp}, #{content})
+	</insert>
+	<select id="selectBroadcasterReviewListByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("new")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) ORDER BY brc_b_c.id DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("popular")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (brc_b_c.up - brc_b_c.down) >= #{order}) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) ORDER BY (brc_b_c.up - brc_b_c.down) >= #{order} DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("new")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) ORDER BY brc_b_c.id DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("popular")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d') AND (brc_b_c.up - brc_b_c.down) >= #{order}) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) ORDER BY (brc_b_c.up - brc_b_c.down) >= #{order} DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("new")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) ORDER BY brc_b_c.id DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("popular")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = c.id AND status = 1) replyCount,
+								(SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_review_id = c.id AND (b.user_id = #{user_id} OR b.ip = #{ip})) type
+							FROM
+								broadcaster_review c INNER JOIN user u ON c.user_id = u.id) brc_b_c
+						WHERE
+							(brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 1 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m') AND (brc_b_c.up - brc_b_c.down) >= #{order}) OR (brc_b_c.broadcaster_id = #{broadcaster_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0 AND DATE_FORMAT(brc_b_c.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) ORDER BY (brc_b_c.up - brc_b_c.down) >= #{order} DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+		</choose>
+	</select>
+	<select id="selectBroadcasterReviewListCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("new")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d'))
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("popular")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order})
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("new")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d'))
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("popular")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order})
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("new")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m'))
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("popular")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m') AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m') AND (brc_cr.up - brc_cr.down) >= #{order})
+			</when>
+		</choose>
+	</select>
+	<insert id="insertBroadcasterReviewReply" parameterType="com.kjh.aps.domain.CommentReplyDTO">
+		INSERT INTO broadcaster_review_reply(broadcaster_review_id, user_id, ip, content) VALUES(#{broadcaster_review_id}, #{user_id}, #{ip}, #{content})
+	</insert>
+	<select id="selectBroadcasterReviewReplyListByMap" resultType="com.kjh.aps.domain.CommentReplyDTO">
+		SELECT brc_b_cr_list.* FROM
+			(SELECT
+				@rownum:=@rownum+1 as no, brc_b_cr.*
+			FROM
+				(SELECT
+					cr.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType
+				FROM
+					broadcaster_review_reply cr INNER JOIN user u ON cr.user_id = u.id
+				WHERE
+					cr.broadcaster_review_id = #{broadcaster_review_id} AND cr.status = 1 ORDER BY cr.id ASC) brc_b_cr, (SELECT @rownum:=0) rownum) brc_b_cr_list
+		WHERE brc_b_cr_list.no BETWEEN #{page} AND #{row}
+	</select>
+	<select id="selectBroadcasterReviewReplyCountByBroadcasterReviewId" resultType="Integer">
+		SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = #{param1} AND status = 1
+	</select>
+	<select id="selectBroadcasterReviewByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		SELECT b.* FROM (SELECT * FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.id = #{id} AND status = 1
+	</select>
+	<update id="updateBroadcasterReview">
+		UPDATE broadcaster_review SET ip = #{ip}, content = #{content} WHERE (broadcaster_id = #{broadcaster_id}) AND (id = #{id} AND user_id = #{user_id}) AND status = 1
+	</update>
+	<update id="deleteBroadcasterReview">
+		UPDATE broadcaster_review SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_id = #{broadcaster_id}) AND (id = #{id} AND user_id = #{user_id}) AND status = 1
+	</update>
+	<update id="deleteBroadcasterReviewReply">
+		UPDATE broadcaster_review_reply SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_review_id = #{broadcaster_review_id}) AND (id = #{id} AND user_id = #{user_id}) AND status = 1
+	</update>
+	<select id="selectBroadcasterReviewRecommendHistoryTypeByMap" resultType="Integer">
+		SELECT b.type FROM (SELECT * FROM broadcaster_review_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE (b.broadcaster_review_id = #{id}) AND (b.user_id = #{user_id} OR b.ip = #{ip})
+	</select>
+	<insert id="insertBroadcasterReviewRecommendHistory">
+		<if test='type.equals("up")'>		
+			INSERT INTO broadcaster_review_recommend_history(broadcaster_id, broadcaster_review_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 1)
+		</if>
+		<if test='type.equals("down")'>		
+			INSERT INTO broadcaster_review_recommend_history(broadcaster_id, broadcaster_review_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 2)
+		</if>
+	</insert>
+	<update id="updateBroadcasterReviewRecommend">
+		<if test='type.equals("up")'>
+			UPDATE broadcaster_review SET up = up + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
+		</if>
+		<if test='type.equals("down")'>
+			UPDATE broadcaster_review SET down = down + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
+		</if>
+	</update>
+	<select id="selectBroadcasterReviewCount" resultType="Integer">
+		<choose>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("new")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d'));
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("today") and listType2.equals("popular")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order})				
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("new")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d'))				
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("week") and listType2.equals("popular")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d') AND (brc_cr.up - brc_cr.down) >= #{order})				
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("new")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m'))			
+			</when>
+			<when test='listType1 != null and listType2 != null and listType1.equals("month") and listType2.equals("popular")'>
+				SELECT (sum((SELECT count(id) FROM broadcaster_review WHERE id = brc_cr.id AND status = 1)) + sum(brc_cr.replyCount)) reviewCount FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM broadcaster_review_reply WHERE broadcaster_review_id = cr.id AND status = 1) replyCount
+					FROM
+						broadcaster_review cr WHERE cr.broadcaster_id = #{broadcaster_id}) brc_cr
+				WHERE (brc_cr.status = 1 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m') AND (brc_cr.up - brc_cr.down) >= #{order}) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0 AND DATE_FORMAT(brc_cr.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m') AND (brc_cr.up - brc_cr.down) >= #{order})
+			</when>
+		</choose>
+	</select>
+	<select id="selectBroadcasterReviewGradePointAverageListByMap" resultType="com.kjh.aps.domain.ReviewGradePointDTO">
+		<choose>
+			<when test='dataType != null and dataType.equals("week")'>
+				SELECT
+					round(avg(b.gp), 1) gp_avg, DATE_FORMAT(b.register_date, '%Y-%m-%d') gp_date
+				FROM
+					(SELECT * FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) b
+				WHERE
+					DATE_FORMAT(b.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d') AND b.status = 1 GROUP BY DATE_FORMAT(b.register_date, '%Y-%m-%d') ORDER BY DATE_FORMAT(b.register_date, '%Y-%m-%d') ASC
+			</when>
+			<when test='dataType != null and dataType.equals("month")'>
+				SELECT
+					round(avg(b.gp), 1) gp_avg, DATE_FORMAT(b.register_date, '%Y-%m') gp_date
+				FROM
+					(SELECT * FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) b
+				WHERE
+					DATE_FORMAT(b.register_date, '%Y') = DATE_FORMAT(#{year}, '%Y') AND b.status = 1 GROUP BY DATE_FORMAT(b.register_date, '%Y-%m') ORDER BY DATE_FORMAT(b.register_date, '%Y-%m') ASC
+			</when>
+		</choose>
+	</select>
+	<select id="selectBroadcasterReviewGradePointAverageByMap" resultType="com.kjh.aps.domain.ReviewGradePointDTO">
+		SELECT 
+			round(avg((SELECT gp FROM broadcaster_review WHERE id = b.id AND DATE_FORMAT(register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d'))), 1) gp_avg_today,
+			round(avg((SELECT gp FROM broadcaster_review WHERE id = b.id AND DATE_FORMAT(register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d'))), 1) gp_avg_week,
+		    round(avg((SELECT gp FROM broadcaster_review WHERE id = b.id AND DATE_FORMAT(register_date, '%Y-%m') = DATE_FORMAT(#{today}, '%Y-%m'))), 1) gp_avg_month
+		FROM
+			broadcaster_review b WHERE b.broadcaster_id = #{broadcaster_id} AND b.status = 1
+	</select>
+	<select id="selectBroadcasterReviewCountByMap" resultType="Integer">
+		SELECT count(br.id) FROM (SELECT * FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) br WHERE DATE_FORMAT(br.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (br.user_id = #{user_id} OR br.ip = #{ip}) 
+	</select>
+	<select id="selectLastNotice" resultType="com.kjh.aps.domain.BoardDTO">
+		<![CDATA[
+			SELECT n.* FROM (SELECT @rownum:=@rownum+1 as no, n.* FROM notice n, (SELECT @rownum:=0) rownum ORDER BY n.id DESC) n WHERE n.no <= 5 AND n.status = 1
+		]]>
+	</select>
+	<select id="selectCombineBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test='listType != null and listType.equals("today")'>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.id, b.user_id, b.ip, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+							((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							combine_board b
+				        WHERE
+							(b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+ 			<when test='listType != null and listType.equals("week")'>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.id, b.user_id, b.ip, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+							((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							combine_board b
+				        WHERE
+							b.status = 1 AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<when test='listType != null and listType.equals("month")'>				
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.id, b.user_id, b.ip, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+							((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							combine_board b
+				        WHERE
+							b.status = 1 AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.id, b.user_id, b.ip, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+							((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							combine_board b
+				        WHERE
+							b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCombineBoardWriteCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType != null and listType.equals("today")'>
+				SELECT count(b.id) FROM (SELECT * FROM combine_board WHERE status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order})
+			</when>
+ 			<when test='listType != null and listType.equals("week")'>
+				SELECT count(b.id) FROM (SELECT * FROM combine_board WHERE status = 1) b WHERE ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order})
+			</when>
+			<when test='listType != null and listType.equals("month")'>
+				SELECT count(b.id) FROM (SELECT * FROM combine_board WHERE status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order})
+			</when> 
+			<otherwise>
+				SELECT count(id) FROM combine_board WHERE status = 1
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCombineBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<![CDATA[
+			SELECT
+				brc_b.id, brc_b.ip, brc_b.user_id, brc_b.nickname, brc_b.profile, brc_b.level, brc_b.user_type userType, brc_b.type board_type, brc_b.subject, brc_b.content, brc_b.image_flag, brc_b.media_flag, brc_b.up, brc_b.down, brc_b.view, brc_b.status, brc_b.register_date,
+				(SELECT min(n.id) FROM (SELECT * FROM combine_board WHERE status = 1) n WHERE n.id > #{id}) as next_id,
+	            (SELECT max(p.id) FROM (SELECT * FROM combine_board WHERE status = 1) p WHERE p.id < #{id}) as prev_id,
+				(SELECT ns.subject FROM (SELECT * FROM combine_board WHERE status = 1) ns WHERE ns.id = (SELECT min(n.id) FROM (SELECT * FROM combine_board WHERE status = 1) n WHERE n.id > #{id})) as next_subject,
+            	(SELECT ps.subject FROM (SELECT * FROM combine_board WHERE status = 1) ps WHERE ps.id = (SELECT max(p.id) FROM (SELECT * FROM combine_board WHERE status = 1) p WHERE p.id < #{id})) as prev_subject,
+            	(SELECT type FROM combine_board_recommend_history WHERE combine_board_id = #{id} AND (user_id = #{user_id} OR ip = #{ip})) type,
+            	((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = #{id} AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = #{id}) AND status = 1)) commentCount
+			FROM
+				(SELECT * FROM combine_board WHERE status = 1) brc_b
+			WHERE brc_b.id = #{id} AND brc_b.status = 1
+		]]>
+	</select>
+	<select id="selectCombineBoardWriteTypeById" resultType="String">
+		SELECT type FROM combine_board WHERE id = #{param1} AND status = 1
+	</select>
+	<update id="updateCombineBoardWriteView">
+		UPDATE combine_board SET view = view + 1 WHERE id = #{id} AND status = 1
+	</update>
+	<select id="selectModifyCombineBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test='type != null and type.equals("non")'>
+				<![CDATA[
+					SELECT id, nickname, password, subject, content, type board_type FROM combine_board WHERE id = #{id} AND password = #{password} AND user_type < 1 AND type = #{type} AND status = 1
+				]]>
+			</when>
+			<when test='type != null and type.equals("user")'>
+				SELECT id, subject, content, type board_type FROM combine_board WHERE id = #{id} AND user_id = #{user_id} AND user_type > 0 AND type = #{type} AND status = 1
+			</when>
+		</choose>
+	</select>
+	<update id="updateCombineBoardWrite">
+		<choose>
+			<when test='board_type.equals("non")'>
+				UPDATE combine_board SET ip = #{ip}, subject = #{subject}, content = #{content}, image_flag = #{image_flag}, media_flag = #{media_flag} WHERE id = #{id} AND nickname = #{nickname} AND password = #{password} AND type = #{board_type} AND status = 1
+			</when>
+			<when test='board_type.equals("user")'>
+				UPDATE combine_board SET ip = #{ip}, subject = #{subject}, content = #{content}, image_flag = #{image_flag}, media_flag = #{media_flag} WHERE id = #{id} AND user_id = #{user_id} AND type = #{board_type} AND status = 1
+			</when>
+		</choose>
+	</update>
+	<update id="updateCombineBoardWriteRecommend">
+		<if test='type.equals("up")'>
+			UPDATE combine_board SET up = up + 1 WHERE id = #{id} AND status = 1
+		</if>
+		<if test='type.equals("down")'>
+			UPDATE combine_board SET down = down + 1 WHERE id = #{id} AND status = 1
+		</if>
+	</update>
+	<select id="selectCombineBoardWriteRecommendHistoryTypeByMap" resultType="Integer">
+		SELECT type FROM combine_board_recommend_history WHERE combine_board_id = #{id} AND (user_id = #{user_id} OR ip = #{ip})
+	</select>
+	<insert id="insertCombineBoardWriteRecommendHistory">
+		<choose>
+			<when test='user_id != 0'>
+				<if test='type.equals("up")'>
+					INSERT INTO combine_board_recommend_history(combine_board_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 1)
+				</if>
+				<if test='type.equals("down")'>
+					INSERT INTO combine_board_recommend_history(combine_board_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 2)
+				</if>
+			</when>
+			<otherwise>
+				<if test='type.equals("up")'>
+					INSERT INTO combine_board_recommend_history(combine_board_id, ip, type) VALUES(#{id}, #{ip}, 1)
+			
+				</if>
+				<if test='type.equals("down")'>
+					INSERT INTO combine_board_recommend_history(combine_board_id, ip, type) VALUES(#{id}, #{ip}, 2)
+				</if>
+			</otherwise>
+		</choose>
+	</insert>
+	<update id="deleteCombineBoardWrite">
+		<choose>
+			<when test='board_type.equals("non")'>
+				UPDATE combine_board SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND password = #{password} AND type = #{board_type}
+			</when>
+			<when test='board_type.equals("user")'>
+				UPDATE combine_board SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND user_id = #{user_id} AND type = #{board_type}
+			</when>
+		</choose>
+	</update>
+	<insert id="insertCombineBoardWriteComment" parameterType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='comment_type.equals("non")'>
+				INSERT INTO combine_board_comment(combine_board_id, nickname, password, ip, content, type)
+				VALUE(#{combine_board_id}, #{nickname}, #{password}, #{ip}, #{content}, #{comment_type})
+			</when>
+			<when test='comment_type.equals("user") and user_id != 0'>
+				INSERT INTO combine_board_comment(combine_board_id, user_id, ip, nickname, profile, level, content, user_type, type)
+				VALUE(#{combine_board_id}, #{user_id}, #{ip}, #{nickname}, #{profile}, #{level}, #{content}, #{userType}, #{comment_type})
+			</when>
+		</choose>
+	</insert>
+	<select id="selectCombineBoardWriteCommentListByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.id, c.combine_board_id, c.user_id, c.ip, c.nickname, c.profile, c.level, c.user_type userType, c.type comment_type, c.content, c.up, c.down, c.status, c.register_date,
+								(SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id = c.id AND status = 1) replyCount,
+								(SELECT type FROM combine_board_comment_recommend_history WHERE combine_board_comment_id = c.id AND (user_id = #{user_id} OR ip = #{ip})) recommendType
+							FROM
+								combine_board_comment c) brc_b_c
+						WHERE
+							((brc_b_c.combine_board_id = #{combine_board_id} AND brc_b_c.status = 1) AND ((brc_b_c.up - brc_b_c.down) >= #{order})) OR ((brc_b_c.combine_board_id = #{combine_board_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0) AND ((brc_b_c.up - brc_b_c.down) >= #{order})) ORDER BY (brc_b_c.up - brc_b_c.down) DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT brc_b_c_j_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b_c_j.*
+					FROM
+						(SELECT
+							brc_b_c.*
+						FROM
+							(SELECT
+								c.id, c.combine_board_id, c.user_id, c.ip, c.nickname, c.profile, c.level, c.user_type userType, c.type comment_type, c.content, c.up, c.down, c.status, c.register_date,
+								(SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id = c.id AND status = 1) replyCount,
+								(SELECT type FROM combine_board_comment_recommend_history WHERE combine_board_comment_id = c.id AND (user_id = #{user_id} OR ip = #{ip})) recommendType
+							FROM
+								combine_board_comment c) brc_b_c
+						WHERE
+							(brc_b_c.combine_board_id = #{combine_board_id} AND brc_b_c.status = 1) OR (brc_b_c.combine_board_id = #{combine_board_id} AND brc_b_c.status = 0 AND brc_b_c.replyCount != 0) ORDER BY brc_b_c.id DESC) brc_b_c_j, (SELECT @rownum:=0) rownum) brc_b_c_j_list
+				WHERE brc_b_c_j_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCombineBoardWriteCommentCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id = cr.id AND status = 1) replyCount
+					FROM
+						combine_board_comment cr WHERE cr.combine_board_id = #{combine_board_id}) brc_cr
+				WHERE ((brc_cr.status = 1) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0)) AND (brc_cr.up - brc_cr.down) >= #{order}
+			</when>
+			<otherwise>
+				SELECT count(brc_cr.id) FROM
+					(SELECT cr.*,
+						(SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id = cr.id AND status = 1) replyCount
+					FROM
+						combine_board_comment cr WHERE cr.combine_board_id = #{combine_board_id}) brc_cr
+				WHERE (brc_cr.status = 1) OR (brc_cr.status = 0 AND brc_cr.replyCount != 0)
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCombineBoardWriteCommentTypeById" resultType="String">
+		SELECT type FROM combine_board_comment WHERE id = #{param1} AND status = 1
+	</select>
+	<select id="selectCombineBoardWriteCommentByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='type != null and type.equals("non")'>
+				<![CDATA[
+					SELECT id, nickname, password, content, type comment_type FROM combine_board_comment WHERE id = #{id} AND password = #{password} AND user_type < 1 AND type = #{type} AND status = 1
+				]]>
+			</when>
+			<when test='type != null and type.equals("user")'>
+				SELECT id, content, type comment_type FROM combine_board_comment WHERE id = #{id} AND user_id = #{user_id} AND user_type > 0 AND type = #{type} AND status = 1
+			</when>
+		</choose>
+	</select>
+	<update id="updateCombineBoardWriteComment">
+		<choose>
+			<when test='comment_type.equals("non")'>
+				UPDATE combine_board_comment SET ip = #{ip}, content = #{content} WHERE id = #{id} AND nickname = #{nickname} AND password = #{password} AND type = #{comment_type} AND status = 1
+			</when>
+			<when test='comment_type.equals("user")'>
+				UPDATE combine_board_comment SET ip = #{ip}, content = #{content} WHERE id = #{id} AND user_id = #{user_id} AND type = #{comment_type} AND status = 1
+			</when>
+		</choose>
+	</update>
+	<update id="deleteCombineBoardWriteComment">
+		<choose>
+			<when test='comment_type.equals("non")'>
+				UPDATE combine_board_comment SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND password = #{password} AND type = #{comment_type}
+			</when>
+			<when test='comment_type.equals("user")'>
+				UPDATE combine_board_comment SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND user_id = #{user_id} AND type = #{comment_type}
+			</when>
+		</choose>
+	</update>
+	<update id="updateCombineBoardWriteCommentRecommend">
+		<if test='type.equals("up")'>
+			UPDATE combine_board_comment SET up = up + 1 WHERE id = #{id} AND status = 1
+		</if>
+		<if test='type.equals("down")'>
+			UPDATE combine_board_comment SET down = down + 1 WHERE id = #{id} AND status = 1
+		</if>
+	</update>
+	<select id="selectCombineBoardWriteCommentRecommendHistoryTypeByMap" resultType="Integer">
+		SELECT type FROM combine_board_comment_recommend_history WHERE combine_board_comment_id = #{id} AND (user_id = #{user_id} OR ip = #{ip})
+	</select>
+	<insert id="insertCombineBoardWriteCommentRecommendHistory">
+		<choose>
+			<when test='user_id != 0'>
+				<if test='type.equals("up")'>
+					INSERT INTO combine_board_comment_recommend_history(combine_board_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 1)
+				</if>
+				<if test='type.equals("down")'>
+					INSERT INTO combine_board_comment_recommend_history(combine_board_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 2)
+				</if>
+			</when>
+			<otherwise>
+				<if test='type.equals("up")'>
+					INSERT INTO combine_board_comment_recommend_history(combine_board_comment_id, ip, type) VALUES(#{id}, #{ip}, 1)
+			
+				</if>
+				<if test='type.equals("down")'>
+					INSERT INTO combine_board_comment_recommend_history(combine_board_comment_id, ip, type) VALUES(#{id}, #{ip}, 2)
+				</if>
+			</otherwise>
+		</choose>
+	</insert>
+	<insert id="insertCombineBoardWriteCommentReply" parameterType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='commentReply_type.equals("non")'>
+				INSERT INTO combine_board_comment_reply(combine_board_comment_id, nickname, password, ip, content, type)
+				VALUE(#{combine_board_comment_id}, #{nickname}, #{password}, #{ip}, #{content}, #{commentReply_type})
+			</when>
+			<when test='commentReply_type.equals("user") and user_id != 0'>
+				INSERT INTO combine_board_comment_reply(combine_board_comment_id, user_id, ip, nickname, profile, level, content, user_type, type)
+				VALUE(#{combine_board_comment_id}, #{user_id}, #{ip}, #{nickname}, #{profile}, #{level}, #{content}, #{userType}, #{commentReply_type})
+			</when>
+		</choose>
+	</insert>
+	<select id="selectCombineBoardWriteCommentReplyListByMap" resultType="com.kjh.aps.domain.CommentReplyDTO">
+		SELECT brc_b_cr_list.* FROM
+			(SELECT
+				@rownum:=@rownum+1 as no, brc_b_cr.*
+			FROM
+				(SELECT
+					cr.id, cr.combine_board_comment_id, cr.user_id, cr.ip, cr.nickname, cr.profile, cr.level, cr.user_type userType, cr.type commentReply_type, cr.content, cr.status, cr.register_date
+				FROM
+					combine_board_comment_reply cr
+				WHERE
+					cr.combine_board_comment_id = #{combine_board_comment_id} AND cr.status = 1 ORDER BY cr.id ASC) brc_b_cr, (SELECT @rownum:=0) rownum) brc_b_cr_list
+		WHERE brc_b_cr_list.no BETWEEN #{page} AND #{row}
+	</select>
+	<select id="selectCombineBoardWriteCommentReplyCountByCombineBoardCommentId" resultType="Integer">
+		SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id = #{param1} AND status = 1
+	</select>
+	<select id="selectCombineBoardWriteCommentReplyTypeById" resultType="String">
+		SELECT type FROM combine_board_comment_reply WHERE id = #{param1} AND status = 1
+	</select>
+	<update id="deleteCombineBoardWriteCommentReply">
+		<choose>
+			<when test='commentReply_type.equals("non")'>
+				UPDATE combine_board_comment_reply SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND password = #{password} AND type = #{commentReply_type}
+			</when>
+			<when test='commentReply_type.equals("user")'>
+				UPDATE combine_board_comment_reply SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE id = #{id} AND user_id = #{user_id} AND type = #{commentReply_type}
+			</when>
+		</choose>
+	</update>
+	<select id="selectSearchCombineBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test="searchType == 1">
+				<choose>
+					<when test='listType != null and listType.equals("today")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.id, b.ip, b.user_id, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+									((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									combine_board b
+						        WHERE
+									(b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<when test='listType != null and listType.equals("week")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.id, b.ip, b.user_id, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+									((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									combine_board b
+						        WHERE
+									(b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<when test='listType != null and listType.equals("month")'>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.id, b.ip, b.user_id, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+									((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									combine_board b
+						        WHERE
+									(b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</when>
+					<otherwise>
+						SELECT brc_b_list.* FROM
+							(SELECT
+								@rownum:=@rownum+1 as no, brc_b.*
+							FROM
+								(SELECT
+									b.id, b.ip, b.user_id, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+									((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+								FROM
+									combine_board b
+						        WHERE
+									(b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+						WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				SELECT brc_b_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, brc_b.*
+					FROM
+						(SELECT
+							b.id, b.ip, b.user_id, b.nickname, b.profile, b.level, b.user_type userType, b.type board_type, b.subject, b.content, b.image_flag, b.media_flag, b.up, b.down, b.view, b.status, b.register_date,
+							((SELECT count(id) FROM combine_board_comment WHERE combine_board_id = b.id AND status = 1) + (SELECT count(id) FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id = b.id) AND status = 1)) commentCount
+						FROM
+							combine_board b
+						WHERE
+							(b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+						ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectSearchCombineBoardWriteCountByMap" resultType="Integer">
+		<choose>
+			<when test="searchType == 1">
+				<choose>
+					<when test='listType != null and listType.equals("today")'>
+						SELECT count(id) FROM combine_board WHERE (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((up - down) >= #{order}))
+					</when>
+					<when test='listType != null and listType.equals("week")'>
+						SELECT count(id) FROM combine_board WHERE (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((up - down) >= #{order}))
+					</when>
+					<when test='listType != null and listType.equals("month")'>
+						SELECT count(id) FROM combine_board WHERE (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+						AND ((DATE_FORMAT(register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((up - down) >= #{order}))
+					</when>
+					<otherwise>
+						SELECT count(id) FROM combine_board WHERE (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+					</otherwise>
+				</choose>
+			</when>
+			<otherwise>
+				SELECT count(id) FROM combine_board WHERE (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

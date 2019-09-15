@@ -1,0 +1,115 @@
+@charset "UTF-8";
+/* 약관 안내 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid {
+	padding: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row {
+	margin: 0 -2.5px;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box .menu {
+	text-align: center;
+	padding: 15px;
+	border: 1px solid #EAEAEA;
+	font-size: 18px;
+	color: gray;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box .menu.active {
+	border: 1px solid #0545B1;
+	background-color: #0545B1;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box .menu:first-child {
+	margin-right: 2.5px;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box .menu:last-child {
+	margin-left: 2.5px;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-title {
+	margin-top: 10px;
+	border-bottom: 3px solid #EAEAEA;
+	font-family: "나눔스퀘어";
+	font-size: 15pt;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content {
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid #EAEAEA;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .toc {
+	margin: 15px 0;
+	padding: 10px;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .toc-m {
+	display: none;
+	margin: 15px 0;
+	padding: 10px;
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .toc .row {
+	margin: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .title {
+	font-family: "나눔스퀘어";
+	font-weight: bold;
+	font-size: 14pt;
+	color: black;
+}
+.content-wrapper .content-inner .content-inner-box .container-fluid .policy-regdate {
+	margin-top: 10px;
+	text-align: right;
+}
+
+/* 약관 안내 페이지 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 10px;
+	}
+}
+@media(max-width:767px) {
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab .row .menu-box .menu.active {
+		border: 1px solid #EAEAEA;
+		background-color: rgba(246, 246, 246, 0.4);
+		color: #445;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-tab  .row .menu-box .menu {
+		font-size: 16px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-title {
+		font-size: 18px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .toc {
+		display: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .toc-m {
+		display: block;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-content .title {
+		font-size: 18px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container-fluid .policy-regdate {
+		font-size: 14px;
+	}
+}

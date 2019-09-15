@@ -1,0 +1,45 @@
+@charset "UTF-8";
+/* 하단 푸터 */
+.footer-wrapper {
+	border-top: 1px solid #EAEAEA;
+	background-color: white;
+}
+.footer-wrapper .footer-inner {
+	max-width: 1000px;
+	margin: auto;
+	padding: 5px 0;
+	text-align: center;
+	font-size: 10pt;
+}
+.footer-wrapper .footer-inner .policy {
+	padding: 5px 0;
+}
+.footer-wrapper .footer-inner .policy a {
+	color: #445;
+}
+.footer-wrapper .footer-inner .policy a:before {
+	content: "";
+	display: inline-block;
+	width: 1px;
+	height: 11px;
+	margin: 0 10px;
+	background-color: #445;
+	vertical-align: -1px;
+}
+.footer-wrapper .footer-inner .policy a:first-child:before {
+	display: none;
+}
+.footer-wrapper .footer-inner .policy a.bold {
+	font-weight: bold;
+}
+.footer-wrapper .footer-inner .copyright {
+	padding: 5px 0;
+	color: dimgray;
+}
+
+/* 하단 푸터 반응형 */
+@media(max-width:767px) {
+	.footer-wrapper {
+		background-color: white;
+	}
+}

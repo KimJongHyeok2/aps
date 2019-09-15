@@ -1,0 +1,86 @@
+@charset "UTF-8";
+/* 아이디 / 비밀번호 찾기 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 500px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box .find-tab-box .find-tab {
+	display: flex;
+	list-style-type: none;
+	margin: 0.;
+	padding: 0;
+	overflow: hidden;
+}
+.content-wrapper .content-inner .content-inner-box .find-tab-box .find-tab .fl-default {
+	flex-grow: 1;
+	padding: 10px;
+	text-align: center;
+	border-bottom: 3px solid #D5D5D5;
+	font-family: "나눔스퀘어";
+	font-size: 15pt;
+	cursor: pointer;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .find-tab-box .find-tab .fl-default.active {
+	border-bottom: 3px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .find-tab-box .find-tab .fl-default:active {
+	border-bottom: 3px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .input-box {
+	margin-top: 5px;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .input-box:first-child {
+	margin-top: 0;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .input-box input[type="text"], input[type="email"] {
+	width: 100%;
+	height: 50px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+	outline: 0;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .input-box input[type="text"]:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .input-box input[type="email"]:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .confirmMsg {
+	display: none;
+	margin-top: 5px;
+	margin-bottom: 0;
+	color: #F15F5F;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .aps-button {
+	width: 100%;
+	height: 50px;
+	margin-top: 5px;
+	background-color: white;
+	border: 1px solid #D5D5D5;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .aps-button .spinner-aps {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .find-content-box .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+
+/* 아이디 / 비밀번호 찾기 페이지 CSS */
+@media(max-width:500px) {
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 10px;
+	}	
+}

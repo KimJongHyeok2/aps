@@ -1,0 +1,85 @@
+@charset "UTF-8";
+/* 게시판 헤더 CSS */
+.content-wrapper .content-inner .content-inner-box .container .board-header {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header hr {
+	margin: 5px 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img {
+	position: relative;
+	width: 100px;
+	height: 90px;
+	text-align: center
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .medal {
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .medal .best {
+	padding: 5px;
+	border: 1px solid #0dd160;
+	border-radius: 5px;
+	background-color: #0dd160;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .medal .partner {
+	padding: 5px;
+	border: 1px solid #693bed;
+	border-radius: 5px;
+	background-color: #693bed;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .img-fluid {
+	width: 100%;
+	height: 100%;
+	border-radius: 5px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .fa-user {
+	padding: 5px 0;
+	color: #D5D5D5;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info {
+	flex-grow: 1;
+	padding-left: 10px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info .name {
+	font-family: "나눔스퀘어";
+	font-size: 20pt;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info .other-box div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info .other-box .other-button {
+	padding: 5px;
+	border: 1px solid #2e6afd;
+	border-radius: 5px;
+	background-color: #2e6afd;
+	color: white;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info .other-box .other-button.users {
+	cursor: default;
+}
+
+/* 게시판 헤더 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header {
+		margin: 0 10px;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img {
+		width: 80px;
+		height: 70px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-header .profile-img .fa-user {
+		font-size: 4em;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-header .profile-info .name {
+		font-size: 20px;
+	}
+}

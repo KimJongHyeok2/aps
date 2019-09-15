@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="join">
+	<insert id="insertEmailAccessKey" parameterType="com.kjh.aps.domain.EmailAccessDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+		INSERT INTO email_accesskey(accesskey) VALUES(#{accesskey})
+	</insert>
+	<select id="selectEmailAccessKeyById" resultType="String">
+		SELECT accesskey FROM email_accesskey WHERE id = #{param1}
+	</select>
+	<select id="selectUsernameCountByUsername" resultType="Integer">
+		SELECT count(username) FROM user WHERE username = #{param1}
+	</select>
+	<select id="selectEmailCountByEmail" resultType="Integer">
+		SELECT count(email) FROM user WHERE email = #{param1}
+	</select>
+	<insert id="insertUser" parameterType="com.kjh.aps.domain.JoinDTO">
+		INSERT INTO user(username, password, name, nickname, email) VALUES(#{username}, #{password}, #{name}, #{username}, #{email})
+	</insert>
+	<select id="selectUserBySocialLoginDTO" resultType="com.kjh.aps.domain.SocialLoginDTO">
+		SELECT username, password, type FROM user WHERE email = #{param1}
+	</select>
+	<insert id="insertSocialUser" parameterType="com.kjh.aps.domain.SocialLoginDTO">
+		<choose>
+			<when test='loginType != null and loginType.equals("naver")'>			
+				INSERT INTO user(username, password, name, email, type) VALUES(#{username}, #{password}, #{name}, #{email}, 2)
+			</when>
+			<when test='loginType != null and loginType.equals("google")'>
+				INSERT INTO user(username, password, name, email, type) VALUES(#{username}, #{password}, #{name}, #{email}, 3)
+			</when>
+		</choose>
+	</insert>
+</mapper>

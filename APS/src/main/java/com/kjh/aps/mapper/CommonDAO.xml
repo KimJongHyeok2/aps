@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+	<insert id="insertUserPush" parameterType="com.kjh.aps.domain.UserPushDTO">
+		<choose>
+			<when test="type == 1">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, content_id, subject, type) VALUES(#{broadcaster_id}, #{user_id}, #{from_user_id}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 2">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, content_id, subject, type) VALUES(#{broadcaster_id}, (SELECT u.user_id FROM (SELECT * FROM broadcaster_board_comment WHERE broadcaster_board_id = #{content_id}) u WHERE u.id = #{user_id}), #{from_user_id}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 3">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, content_id, subject, type) VALUES(#{broadcaster_id}, (SELECT u.user_id FROM (SELECT id, user_id FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) u WHERE u.id = #{content_id}), #{from_user_id}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 4">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, content_id, subject, type) VALUES(#{broadcaster_id}, #{user_id}, #{from_user_id}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 5">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, content_id, subject, type) VALUES(#{broadcaster_id}, (SELECT u.user_id FROM (SELECT * FROM notice_comment WHERE notice_id = #{content_id}) u WHERE u.id = #{user_id}), #{from_user_id}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 6">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, nonuser_nickname, content_id, subject, type) VALUES(#{broadcaster_id}, #{user_id}, #{from_user_id}, #{nonuser_nickname}, #{content_id}, #{subject}, #{type})
+			</when>
+			<when test="type == 7">
+				INSERT INTO user_push(broadcaster_id, user_id, from_user_id, nonuser_nickname, content_id, subject, type) VALUES(#{broadcaster_id}, (SELECT user_id FROM combine_board_comment WHERE id = #{user_id}), #{from_user_id}, #{nonuser_nickname}, #{content_id}, #{subject}, #{type})
+			</when>
+		</choose>
+	</insert>
+	<select id="selectUserIdByUserPushDTO" resultType="Integer">
+		<choose>
+			<when test="type == 1">
+				SELECT user_id FROM broadcaster_board WHERE id = #{content_id}
+			</when>
+			<when test="type == 2">
+				SELECT u.user_id FROM (SELECT * FROM broadcaster_board_comment WHERE broadcaster_board_id = #{content_id}) u WHERE u.id = #{user_id}
+			</when>
+			<when test="type == 3">
+				SELECT u.user_id FROM (SELECT id, user_id FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) u WHERE u.id = #{content_id}
+			</when>
+			<when test="type == 4">
+				SELECT user_id FROM notice WHERE id = #{content_id}
+			</when>
+			<when test="type == 5">
+				SELECT u.user_id FROM (SELECT * FROM notice_comment WHERE notice_id = #{content_id}) u WHERE u.id = #{user_id}
+			</when>
+			<when test="type == 6">
+				SELECT user_id FROM combine_board WHERE id = #{content_id}
+			</when>
+			<when test="type == 7">
+				SELECT user_id FROM combine_board_comment WHERE id = #{user_id}
+			</when>
+		</choose>
+	</select>
+	<select id="selectUserPushListByUserId" resultType="com.kjh.aps.domain.UserPushDTO">
+		SELECT
+			p.*,
+			(SELECT nickname FROM user WHERE id = p.from_user_id) nickname,
+			(SELECT nickname FROM broadcaster WHERE id = p.broadcaster_id) broadcaster_nickname
+		FROM
+			(SELECT * FROM user_push WHERE user_id = #{param1}) p ORDER BY id DESC
+	</select>
+	<update id="updateUserPushStatus">
+		UPDATE user_push SET status = 0 WHERE id = #{id} AND user_id = #{user_id} AND status = 1
+	</update>
+	<delete id="deleteUserPush">
+		<if test='deleteType != null and deleteType.equals("one")'>
+			DELETE FROM user_push WHERE id = #{id} AND user_id = #{user_id}
+		</if>
+		<if test='deleteType != null and deleteType.equals("readOnly")'>
+			DELETE FROM user_push WHERE user_id = #{user_id} AND status = 0
+		</if>
+		<if test='deleteType != null and deleteType.equals("all")'>
+			DELETE FROM user_push WHERE user_id = #{user_id}
+		</if>
+	</delete>
+	<select id="selectUserRecommendCountByMap" resultType="HashMap">
+		<choose>
+			<when test='type != null and type.equals("board")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + b.exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})) b
+			</when>
+			<when test='type != null and type.equals("boardComment")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})) b
+			</when>
+			<when test='type != null and type.equals("reviewComment")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + b.exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})) b
+			</when>
+			<when test='type != null and type.equals("noticeComment")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + b.exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM notice_comment WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT user_id FROM notice_comment WHERE id = #{id})) b
+			</when>
+			<when test='type != null and type.equals("combineBoard")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + b.exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM combine_board WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT user_id FROM combine_board WHERE id = #{id})) b
+			</when>
+			<when test='type != null and type.equals("combineBoardComment")'>
+				SELECT
+					sum(b.exp1 + b.exp2 + b.exp3 + b.exp4 + b.exp5 + b.exp6) exp, (SELECT level FROM user WHERE id = (SELECT user_id FROM combine_board_comment WHERE id = #{id})) level
+				FROM
+					(SELECT
+						ifnull(sum(up-down), 0) exp1,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_review WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) exp2,
+						(SELECT ifnull(sum(up-down), 0) FROM broadcaster_board_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) exp3,
+						(SELECT ifnull(sum(up-down), 0) FROM notice_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) exp4,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) exp5,
+						(SELECT ifnull(sum(up-down), 0) FROM combine_board_comment WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) exp6
+				    FROM
+						broadcaster_board
+					WHERE user_id = (SELECT ifnull(user_id, 0) FROM combine_board_comment WHERE id = #{id})) b
+			</when>
+		</choose>
+	</select>
+	<update id="updateUserLevel">
+		<choose>
+			<when test='updateType != null and updateType.equals("up")'>
+				<choose>
+					<when test='type != null and type.equals("board")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("boardComment")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("reviewComment")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("noticeComment")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM notice_comment WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("combineBoard")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM combine_board WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("combineBoardComment")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM combine_board_comment WHERE id = #{id})
+					</when>
+				</choose>
+			</when>
+			<when test='updateType != null and updateType.equals("down")'>
+				<choose>
+					<when test='type != null and type.equals("board")'>
+						UPDATE user SET level = level - 1 WHERE id = (SELECT user_id FROM broadcaster_board WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("boardComment")'>
+						UPDATE user SET level = level - 1 WHERE id = (SELECT user_id FROM broadcaster_board_comment WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("reviewComment")'>
+						UPDATE user SET level = level - 1 WHERE id = (SELECT user_id FROM broadcaster_review WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("noticeComment")'>
+						UPDATE user SET level = level - 1 WHERE id = (SELECT user_id FROM notice_comment WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("combineBoard")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM combine_board WHERE id = #{id})
+					</when>
+					<when test='type != null and type.equals("combineBoardComment")'>
+						UPDATE user SET level = level + 1 WHERE id = (SELECT user_id FROM combine_board_comment WHERE id = #{id})
+					</when>
+				</choose>
+			</when>
+		</choose>
+	</update>
+	<delete id="deleteExpireBoardWriteCommentReply">
+		DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireBoardWriteCommentRecommendHistory">
+		DELETE FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireBoardWriteComment">
+		DELETE FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBoardWriteRecommendHistory">
+		DELETE FROM broadcaster_board_recommend_history WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBoardWrite">
+		DELETE FROM broadcaster_board WHERE id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserLog">
+		DELETE FROM user_log WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBan">
+		DELETE FROM user_ban WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserPush">
+		DELETE FROM user_push WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUser">
+		DELETE FROM user WHERE id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBoardWriteCommentChildReply">
+		DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserBoardWriteCommentReply">
+		DELETE FROM broadcaster_board_comment_reply WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBoardWriteCommentRecommendHistory">
+		DELETE FROM broadcaster_board_comment_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBoardWriteComment">
+		DELETE FROM broadcaster_board_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBoardWriteChildRecommendHistory">
+		DELETE FROM broadcaster_board_recommend_history WHERE broadcaster_board_id IN (SELECT id FROM broadcaster_board WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserBoardWriteRecommendHistory">
+		DELETE FROM broadcaster_board_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBoardWrite">
+		DELETE FROM broadcaster_board WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBoardWriteCommentIndivReply">
+		DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBoardWriteCommentIndivRecommendHistory">	
+		DELETE FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBoardWriteCommentIndiv">
+		DELETE FROM broadcaster_board_comment WHERE id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})	
+	</delete>
+	<delete id="deleteExpireBoardWriteCommentReplyIndiv">
+		DELETE FROM broadcaster_board_comment_reply WHERE id IN (SELECT bc_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment_reply WHERE status = 0) bc_r WHERE bc_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBraodcasterReviewIndivReply">
+		DELETE FROM broadcaster_review_reply WHERE broadcaster_review_id IN (SELECT br_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM broadcaster_review WHERE status = 0) br_r WHERE br_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBraodcasterReviewIndivRecommendHistory">
+		DELETE FROM broadcaster_review_recommend_history WHERE broadcaster_review_id IN (SELECT br_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM broadcaster_review WHERE status = 0) br_r WHERE br_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBraodcasterReviewIndiv">
+		DELETE FROM broadcaster_review WHERE id IN (SELECT br_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM broadcaster_review WHERE status = 0) br_r WHERE br_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBraodcasterReviewReplyIndiv">
+		DELETE FROM broadcaster_review_reply WHERE id IN (SELECT br_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_review_reply WHERE status = 0) br_r WHERE br_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBroadcasterReviewChildReply">
+		DELETE FROM broadcaster_review_reply WHERE broadcaster_review_id IN (SELECT id FROM broadcaster_review WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserBroadcasterReviewReply">
+		DELETE FROM broadcaster_review_reply WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})		
+	</delete>
+	<delete id="deleteExpireUserBroadcasterReviewChildRecommendHistory">
+		DELETE FROM broadcaster_review_recommend_history WHERE broadcaster_review_id IN (SELECT id FROM broadcaster_review WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserBroadcasterReviewRecommendHistory">
+		DELETE FROM broadcaster_review_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserBroadcasterReview">
+		DELETE FROM broadcaster_review WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentReply">
+		DELETE FROM notice_comment_reply WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE notice_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM notice WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentRecommendHistory">
+		DELETE FROM notice_comment_recommend_history WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE notice_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM notice WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteComment">
+		DELETE FROM notice_comment WHERE notice_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM notice WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWrite">
+		DELETE FROM notice WHERE id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM notice WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentIndivReply">
+		DELETE FROM notice_comment_reply WHERE notice_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM notice_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentReplyIndiv">
+		DELETE FROM notice_comment_reply WHERE id IN (SELECT bc_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM notice_comment_reply WHERE status = 0) bc_r WHERE bc_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentIndivRecommendHistory">	
+		DELETE FROM notice_comment_recommend_history WHERE notice_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM notice_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceBoardWriteCommentIndiv">
+		DELETE FROM notice_comment WHERE id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM notice_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})	
+	</delete>
+	<delete id="deleteExpireUserCustomerServiceBoardWriteCommentChildReply">
+		DELETE FROM notice_comment_reply WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserCustomerServiceBoardWriteCommentReply">
+		DELETE FROM notice_comment_reply WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})		
+	</delete>
+	<delete id="deleteExpireUserCustomerServiceBoardWriteCommentChildRecommendHistory">
+		DELETE FROM notice_comment_recommend_history WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserCustomerServiceBoardWriteCommentRecommendHistory">
+		DELETE FROM notice_comment_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCustomerServiceBoardWriteComment">
+		DELETE FROM notice_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, delete_Date) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBroadcasterBoardWriteRecommendHistory">
+		DELETE FROM broadcaster_board_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_board_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBroadcasterBoardWriteCommentRecommendHistory">
+		DELETE FROM broadcaster_board_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_board_comment_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireBroadcasterReviewRecommendHistory">
+		DELETE FROM broadcaster_review_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_review_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCustomerServiceCommentRecommendHistory">
+		DELETE FROM notice_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM notice_comment_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserPushIndiv">
+		DELETE FROM user_push WHERE id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM user_push) u WHERE u.datediff >= #{param1})
+	</delete>
+	<update id="deleteSuspensionExpireUser">
+		DELETE FROM user_ban WHERE user_id IN (SELECT u.user_id FROM (SELECT user_id, datediff(period_date, CURRENT_TIMESTAMP) datediff FROM user_ban) u WHERE u.datediff = 0)
+	</update>
+	<update id="updateSuspensionExpireUser">
+		UPDATE user SET enabled = 1 WHERE id IN (SELECT u.user_id FROM (SELECT user_id, datediff(period_date, CURRENT_TIMESTAMP) datediff FROM user_ban) u WHERE u.datediff = 0)
+	</update>
+	<delete id="deleteExpireCombineBoardWriteRecommendHistory">
+		DELETE FROM combine_board_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM combine_board_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentRecommendHistory">
+		DELETE FROM combine_board_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM combine_board_comment_recommend_history) r WHERE r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentReply">
+		DELETE FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentRecommendHistoryIndiv">
+		DELETE FROM combine_board_comment_recommend_history WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE combine_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteComment">
+		DELETE FROM combine_board_comment WHERE combine_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteRecommendHistoryIndiv">
+		DELETE FROM combine_board_recommend_history WHERE combine_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWrite">
+		DELETE FROM combine_board WHERE id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteCommentChildReply">
+		DELETE FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT id FROM combine_board_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteCommentReply">
+		DELETE FROM combine_board_comment_reply WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteCommentRecommendHistory">
+		DELETE FROM combine_board_comment_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteComment">
+		DELETE FROM combine_board_comment WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteChildRecommendHistory">
+		DELETE FROM combine_board_recommend_history WHERE combine_board_id IN (SELECT id FROM combine_board WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1}))
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWriteRecommendHistory">
+		DELETE FROM combine_board_recommend_history WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireUserCombineBoardWrite">
+		DELETE FROM combine_board WHERE user_id IN (SELECT u.id FROM (SELECT id, datediff(delete_date, CURRENT_TIMESTAMP) datediff FROM user WHERE status = 3) u WHERE u.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentIndivReply">
+		DELETE FROM combine_board_comment_reply WHERE combine_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentReplyIndiv">
+		DELETE FROM combine_board_comment_reply WHERE id IN (SELECT bc_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board_comment_reply WHERE status = 0) bc_r WHERE bc_r.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentIndivRecommendHistory">	
+		DELETE FROM combine_board_comment_recommend_history WHERE combine_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+	</delete>
+	<delete id="deleteExpireCombineBoardWriteCommentIndiv">
+		DELETE FROM combine_board_comment WHERE id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM combine_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})	
+	</delete>
+</mapper>

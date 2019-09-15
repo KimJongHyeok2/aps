@@ -1,0 +1,131 @@
+@charset "UTF-8";
+/* 로그인 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 800px;
+	margin: auto;
+}
+.content-wrapper .content-inner .margin-top {
+	margin-top: 5px;
+}
+.content-wrapper .content-inner .aps-button {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #D5D5D5;
+	color: gray;
+	background-color: white;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .aps-button:active {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .row {
+	margin: 0 5px;
+}
+.content-wrapper .content-inner .content-inner-left {
+	max-width: 450px;
+	margin: auto;
+	padding: 10px;
+}
+.content-wrapper .content-inner .content-inner-left .logo-box {
+	padding: 20px 0;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-left .input-box input[type="text"], input[type="password"] {
+	width: 100%;
+	height: 50px;
+	padding: 10px;
+	border: 1px solid #EAEAEA;
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-left .input-box input[type="text"][id="username"] {
+	border-bottom: 1px solid transparent;
+}
+.content-wrapper .content-inner .content-inner-left .input-box input[type="password"][id="password"] {
+	margin-bottom: 5px;
+}
+.content-wrapper .content-inner .content-inner-left .input-box input[type="text"]:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-left .input-box input[type="password"]:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-right {
+	display: flex;
+	align-items: center;
+	max-width: 450px;
+	margin: auto;
+	padding: 10px;
+	padding-top: 0;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper {
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper .social-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper .social-box .social-login {
+	width: 50px;
+	height: 50px;
+	margin-right: 3px;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper .social-box .social-login.naver {
+	width: 48px;
+	height: 47px;
+	margin-right: 5px;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper .social-box #naverIdLogin {
+	margin-right: 5px;
+}
+.content-wrapper .content-inner .content-inner-right .social-wrapper .title-box {
+	font-family: "나눔스퀘어";
+}
+.content-wrapper .content-inner .find-box {
+	margin-top: 5px;
+	font-size: 10pt;
+	color: gray;
+	text-align: center;
+}
+.content-wrapper .content-inner .find-box span {
+	cursor: pointer;
+	transition-property: color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .find-box span:hover {
+	color: #0545B1;
+}
+
+/* 로그인 페이지 반응형 */
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-left .logo-box img {
+		max-width: 150px;		
+	}
+	.content-wrapper .content-inner .content-inner-left {
+		border-right: none;
+	}
+	.content-wrapper .content-inner .content-inner-left .logo-box {
+		display: block;
+	}
+	.content-wrapper .content-inner .content-inner-right {
+		padding: 0 10px;
+	}
+	.content-wrapper .content-inner .content-inner-right .social-wrapper .title-box {
+		display: none;
+	}
+}

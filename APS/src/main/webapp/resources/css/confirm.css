@@ -1,0 +1,57 @@
+@charset "UTF-8";
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px;
+	margin-top: 5px;
+	margin-right: 5px;
+}
+.content-wrapper .content-inner .content-inner-box .error-box {
+	max-width: 500px;
+	margin: auto;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .info-circle {
+	width: 90px;
+	height: 90px;
+	margin: auto;
+	margin-bottom: 10px;
+	text-align: center;
+	border-radius: 50%;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .info-circle.times {
+	border: 1px solid #F15F5F;
+	color: #F15F5F;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .info-circle.exclamation {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .info-circle i {
+	vertical-align: -50px;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .info-circle .fa-exclamation-triangle {
+	vertical-align: -45px;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .code {
+	color: gray;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .text {
+	text-align: center;
+	font-family: "나눔스퀘어";
+	font-size: 16pt;
+}
+.content-wrapper .content-inner .content-inner-box .error-box .text-sub {
+	font-size: 13pt;
+	color: gray;
+}
+.content-wrapper .content-inner .content-inner-box .exception-box {
+	display: none;
+}

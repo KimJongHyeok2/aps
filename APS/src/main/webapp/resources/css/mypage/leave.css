@@ -1,0 +1,137 @@
+@charset "UTF-8";
+/* 회원탈퇴 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box .title {
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .title .info-circle {
+	width: 80px;
+	height: 80px;
+	margin: auto;
+	border: 1px solid #0545B1;
+	border-radius: 50%;
+}
+.content-wrapper .content-inner .content-inner-box .title .info-circle i {
+	color: #0545B1;
+	vertical-align: -40px;
+}
+.content-wrapper .content-inner .content-inner-box .title .text {
+	margin-top: 5px;
+	font-family: "나눔스퀘어";
+	font-size: 30px;
+}
+.content-wrapper .content-inner .content-inner-box .content {
+	max-width: 700px;
+	margin: auto;
+	margin-top: 20px;
+	padding: 15px;
+	border: 1px solid #EAEAEA;
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default {
+	margin-bottom: 20px;
+	font-size: 18px;
+	font-family: "나눔스퀘어";
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default:last-child {
+	margin-bottom: 0;
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default .fa-check {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default ul {
+	list-style-type: none;
+	margin-top: 5px;
+	padding: 0;
+	overflow: hidden;
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default ul li {
+	color: dimgray;
+	font-size: 14px;
+	font-family: "나눔바른고딕";
+}
+.content-wrapper .content-inner .content-inner-box .content .check-list .cl-default ul li:before {
+	content: "";
+	display: inline-block;
+	width: 3px;
+	height: 3px;
+	margin-right: 5px;
+	border: 1px solid dimgray;
+	border-radius: 50%;
+	background-color: dimgray;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .content-inner-box .function {
+	max-width: 700px;
+	margin: auto;
+	margin-top: 10px;
+	text-align: right;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy {
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy .policy-label {
+	width: 30px;
+	margin-right: 5px;
+	text-align: center;
+	border: 1px solid #EAEAEA;
+	background-color: rgba(246, 246, 246, 0.4);
+	color: dimgray;
+	transition-property: border-color, background-color, color;
+	transition-duration: 0.5s;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy:hover .policy-label {
+	border: 1px solid #0545B1; 
+	background-color: white;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy.active .policy-label {
+	border: 1px solid #0545B1; 
+	background-color: white;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy .policy-label i {
+	font-size: 14px;
+}
+.content-wrapper .content-inner .content-inner-box .function .policy-checkbox {
+	display: none;
+}
+.content-wrapper .content-inner .content-inner-box .button {
+	max-width: 700px;
+	margin: auto;
+	margin-top: 10px;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .button .aps-button {
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	color: dimgray;
+	transition-property: border-color, color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .button .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+
+/* 회원탈퇴 페이지 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 10px;
+	}
+}

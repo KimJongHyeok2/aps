@@ -1,0 +1,133 @@
+@charset "UTF-8";
+/* APS 모달 */
+.aps-modal-panel {
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+.aps-modal-panel .aps-modal-wrapper {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner {
+	width: 100%;
+	max-width: 400px;
+	margin: auto;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box {
+	max-width: 100%;
+	margin: 10px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	background-color: white;
+	z-index: 10;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header {
+	display: flex;
+	padding: 10px;
+	font-family: "나눔스퀘어";
+	font-size: 15pt;
+	border-bottom: 1px solid #EAEAEA;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .title {
+	flex-grow: 1;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .title i {
+	vertical-align: middle;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .title .fa-info-circle {
+	color: #0545B1;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .title .fa-question-circle {
+	color: #F2CB61;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .title .fa-times-circle {
+	color: #F15F5F;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .close-button {
+	color: dimgray;
+	cursor: pointer;
+	transition-property: color;
+	transition-duration: 0.5s;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-header .close-button:hover {
+	color: #0545B1;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body {
+	display: flex;
+	align-items: center;
+	min-height: 150px;
+	padding: 10px;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text {
+	flex-grow: 1;
+	text-align: center;
+	word-break: break-all;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .input-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .input-box input[type="text"] {
+	max-width: 200px;
+	height: 40px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .input-box .re-access-button {
+	width: 50px;
+	height: 40px;
+	margin-left: 5px;
+	border: 1px solid #D5D5D5;
+	color: gray;
+	background-color: white;
+	text-align: center;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .input-box .re-access-button i {
+	transition-property: transform;
+  	transition-duration: 1s;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .input-box .re-access-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text input[type="text"]:focus {
+	border: 1px solid #0545B1;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-body .body-text .confirmMsg {
+	display: none;
+	margin-top: 5px;
+	color: #F15F5F;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-footer {
+	padding: 10px;
+	text-align: right;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-footer .aps-modal-button {
+	width: 70px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.aps-modal-panel .aps-modal-wrapper .aps-modal-inner .aps-modal-inner-box .aps-modal-footer .aps-modal-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}

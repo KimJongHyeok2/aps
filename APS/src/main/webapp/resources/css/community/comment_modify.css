@@ -1,0 +1,77 @@
+@charset "UTF-8";
+/* 댓글 수정 페이지 CSS */
+:root {
+	--ck-color-base-foreground: white !important;
+	--ck-color-base-border: #D5D5D5 !important;
+	--ck-color-base-focus: #0545B1 !important;
+	--ck-color-base-active: #0545B1 !important;
+	--ck-color-base-active-focus: #0545B1 !important;
+	--ck-color-focus-border: #0545B1 !important;
+	--ck-color-focus-shadow: rgba(246, 246, 246, 0.4) !important;
+	--ck-color-focus-disabled-shadow: rgba(246, 246, 246, 0.4) !important;
+	--ck-color-shadow-drop: white !important;
+	--ck-color-shadow-drop-active: white !important;
+	--ck-color-shadow-inner: white !important;
+}
+.header-wrapper {
+	margin-bottom: 10px;
+	padding: 30px 0;
+	border-bottom: 1px solid #EAEAEA;
+	text-align: center;
+	font-family: "나눔스퀘어";
+	font-size: 18pt;
+	color: #0545B1;
+}
+.header-wrapper i {
+	vertical-align: middle;
+}
+.container-fluid .row {
+	margin: 0;
+}
+.container-fluid .row .button-box {
+	padding: 0;
+}
+.container-fluid .content-wrapper #comment {
+	width: 100%;
+	min-height: 530px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	transition-property: border-color;
+	transition-duration: 0.5s;	
+	outline: 0;
+}
+.container-fluid .content-wrapper #comment:focus {
+	border: 1px solid #0545B1;
+}
+.container-fluid .content-wrapper .ck.ck-editor__editable[role='textbox'] {
+	min-height: 500px;
+	padding: 10px;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.container-fluid .content-wrapper .ck.ck-editor__editable[role='textbox'] p {
+	margin: 0 !important;
+}
+.container-fluid .footer-wrapper {
+	margin: 10px 0; 
+}
+.container-fluid .footer-wrapper .aps-button {
+	width: 100%;
+	padding: 10px 0;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	transition-property: border-color, color;
+	transition-duration: 0.5s;
+	color: gray;
+	cursor: pointer;	
+}
+.container-fluid .footer-wrapper div:first-child {
+	border-right: 1px solid transparent;
+}
+.container-fluid .footer-wrapper .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.ck.ck-editor__editable[role='textbox'] p {
+	margin: 0 !important;
+}

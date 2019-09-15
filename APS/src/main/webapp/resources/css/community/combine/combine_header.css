@@ -1,0 +1,34 @@
+@charset "UTF-8";
+/* 통합 게시판 헤더 CSS */
+.content-wrapper .content-inner .content-inner-box .container .board-header {
+	padding-bottom: 10px;
+	border-bottom: 2px solid #EAEAEA;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info .name {
+	font-size: 20pt;
+	font-family: "나눔스퀘어";	
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info .other .other-button {
+	padding: 5px;
+	border: 1px solid #2e6afd;
+	border-radius: 5px;
+	background-color: #2e6afd;
+	color: white;
+}
+
+/* 통합 게시판 헤더 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header {
+		margin: 0 10px;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header .info .name {
+		font-size: 20px;
+	}
+}

@@ -1,0 +1,441 @@
+@charset "UTF-8";
+/* 게시글 목록 CSS */
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box {
+	margin-top: 10px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	border: 1px solid #EAEAEA;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .empty-board {
+	margin: auto;
+	margin-top: 45px;
+	margin-bottom: 45px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .empty-board .info-circle {
+	width: 70px;
+	height: 70px;
+	line-height: 68px;
+	margin: auto;
+	margin-bottom: 10px;
+	text-align: center;
+	border: 1px solid #0545B1;
+	border-radius: 50%;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .empty-board .info-circle i {
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .empty-board .text {
+	text-align: center;
+	font-family: "나눔스퀘어";
+	font-size: 14pt;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default {
+	position: relative;
+	padding: 10px;
+	border-bottom: 1px solid #EAEAEA;
+	transition-property: background-color;
+	transition-duration: 0.5s;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default:last-child {
+	border-bottom: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .row {
+	margin: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .write-box {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge {
+	position: absolute;
+	display: flex;
+	top: -3px;
+	left: -11px;
+	font-size: 10px !important;
+	font-weight: bold !important;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge div {
+	text-align: center;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge .new {
+	display: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge .new img {
+	width: 35px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge .new.on {
+	display: block;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .badge .best img {
+	width: 35px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .number {
+	display: none;
+	min-width: 60px;
+	margin-right: 5px;
+	text-align: center;
+	font-size: 14px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .board-badge {
+	margin-right: 5px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .board-badge .badge-new {
+	min-width: 40px;
+	text-align: center;
+	border: 1px solid #CCA63D;
+	background-color: #F2CB61;
+	border-radius: 5px;
+	color: #997000;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .board-badge .badge-normal {
+	min-width: 40px;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	background-color: #EAEAEA;
+	border-radius: 5px;
+	color: dimgray;	
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .board-badge .badge-popular {
+	min-width: 40px;
+	text-align: center;
+	border: 1px solid #F15F5F;
+	background-color: #F15F5F;
+	border-radius: 5px;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box {
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box .subject {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box .subject a {
+	text-decoration: none;
+	color: black;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box .subject a:visited {
+	color: #D5D5D5;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box .info {
+	min-width: 80px;
+	text-align: left;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 180px;
+	margin-right: 5px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .profile-img {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .profile-img .fa-user {
+	padding: 0 2px;
+	color: #D5D5D5;
+	font-size: 20pt;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .profile-img .img-fluid {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .nickname {
+	margin-left: 2px;
+	margin-right: 2px;
+	color: dimgray;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .level {
+	text-align: center;
+	margin-left: 2px;
+	padding: 0 3px;
+	border: 1px solid #0545B1;
+	border-radius: 5px;
+	color: #0545B1;
+	font-size: 14px;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box .master {
+	text-align: center;
+	margin-left: 2px;
+	padding: 0 3px;
+	border: 1px solid #F15F5F;
+	border-radius: 5px;
+	color: #F15F5F;
+	font-size: 14px;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box {
+	min-width: 135px;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box div {
+	display: inline-block;
+	vertical-align: middle;
+	color: gray;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box div:before {
+	content: "";
+	display: inline-block;
+	width: 1px;
+	height: 11px;
+	margin-left: 5px;
+	margin-right: 10px;
+	background-color: lightgray;
+	vertical-align: -1px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box div:first-child:before {
+	display: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box .regdate {
+	width: auto;
+	text-align: center;
+	font-size: 14px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box .viewcount {
+	text-align: center;
+	font-size: 14px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box {
+	display: none;
+	margin-top: 3px;
+	color: gray;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-regdate, .mobile-viewcount {
+	font-size: 14px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box div:before {
+	content: "";
+	display: inline-block;
+	margin: 0 5px;
+	width: 1px;
+	height: 11px;
+	background-color: lightgray;
+	vertical-align: -1px;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box div:first-child:before {
+	display: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box :before {
+	display: none;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .profile-img {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .profile-img .fa-user {
+	font-size: 20pt;
+	color: #D5D5D5;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .profile-img :before {
+	display: inline-block;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .profile-img .img-fluid {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .nickname {
+	color: black;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .level {
+	text-align: center;
+	margin-left: 3px;
+	padding: 0 2px;
+	border: 1px solid #0545B1;
+	border-radius: 5px;
+	color: #0545B1;
+	font-size: 14px;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .master {
+	text-align: center;
+	margin-left: 3px;
+	padding: 0 2px;
+	border: 1px solid #F15F5F;
+	border-radius: 5px;
+	color: #F15F5F;
+	font-size: 14px;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box {
+	position: absolute;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	right: 0;
+	width: 50px;
+	height: 100%;
+	padding: 0 5px;
+	text-align: center;
+	background-color: white;
+	border-left: 1px solid #EAEAEA;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box .comment-count-box {
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box .view-count-box {
+	display: none;
+}
+figure {
+	margin-bottom: 0 !important;
+}
+figure .embedly-card-hug {
+	max-width: 100% !important;
+	margin: 0 !important;
+}
+figure .embedly-card-hug iframe {
+	width: 100% !important;
+}
+.search-wrapper {
+	margin: 10px;
+	margin-bottom: 0;
+}
+.search-wrapper .search-box {
+	display: flex;
+	justify-content: center;
+}
+.search-wrapper .search-box .select select {
+	height: 100%;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	color: dimgray;
+	background-color: white;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.search-wrapper .search-box .select select:focus {
+	border: 1px solid #0545B1;
+}
+.search-wrapper .search-box .input input[type="text"] {
+	width: 250px;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	border-left: 1px solid transparent;
+	border-right: 1px solid transparent;
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.search-wrapper .search-box .input input[type="text"]:focus {
+	border: 1px solid #0545B1;
+}
+.search-wrapper .search-box .button button {
+	width: 50px;
+	height: 100%;
+	padding: 10px;
+	text-align: center;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.search-wrapper .search-box .button button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+
+/* 게시글 리스트 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list {
+		border-left: none;
+		border-right: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .number {
+		display: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .other-box {
+		display: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box {
+		display: block;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .writer-box {
+		display: none;
+	}
+}
+@media(max-width:767px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .subject-box .info {
+		display: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box {
+		display: flex;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-write-box .profile-img .fa-user {
+		font-size: 18pt;
+		vertical-align: -9px;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box div:before {
+		vertical-align: -1px;
+	}
+	.search-wrapper .search-box {
+		width: 100%;
+	}
+	.search-wrapper .search-box .select {
+		flex-grow: 1;
+		min-width: 90px;
+	}
+	.search-wrapper .search-box .select select {
+		width: 100%;
+	}
+	.search-wrapper .search-box .input {
+		flex-grow: 5;
+	}
+	.search-wrapper .search-box .input input[type="text"] {
+		width: 100% !important;
+	}
+	.search-wrapper .search-box .button {
+		flex-grow: 1;
+	}
+	.search-wrapper .search-box .button button {
+		width: 100% !important;
+		min-width: 50px;
+	}
+}
+
+/* 게시글 목록 반응형 */
+@media(max-width:400px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box div:before {
+		margin: 0 3px;
+	}
+}
+@media(max-width:350px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-box .mobile-viewcount {
+		display: none;
+	}
+	.content-wrapper .content-inner .content-inner-box .container .board-content .board-list-box .board-list .bl-default .mobile-info-box .view-count-box {
+		display: block;
+	}
+}

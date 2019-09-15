@@ -1,0 +1,39 @@
+@charset "UTF-8";
+/* 민심순위 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .tool-box {
+	max-width: 500px;
+	margin: auto;
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .tool-box .info-circle {
+	width: 90px;
+	height: 90px;
+	margin: auto;
+	margin-bottom: 10px;
+	text-align: center;
+	border-radius: 50%;
+}
+.content-wrapper .content-inner .content-inner-box .tool-box .info-circle.tools {
+	border: 1px solid #F2CB61;
+	color: #F2CB61;
+}
+.content-wrapper .content-inner .content-inner-box .tool-box .info-circle i {
+	vertical-align: -47px;
+}
+.content-wrapper .content-inner .content-inner-box .tool-box .text {
+	text-align: center;
+	font-family: "나눔스퀘어";
+	font-size: 16pt;
+}

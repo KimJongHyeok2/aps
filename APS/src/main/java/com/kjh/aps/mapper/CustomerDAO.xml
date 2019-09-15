@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cs">
+	<insert id="insertCustomerServiceBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO">
+		INSERT INTO notice(user_id, ip, category_id, subject, content, image_flag, media_flag) VALUES(#{user_id}, #{ip}, #{category_id}, #{subject}, #{content}, #{image_flag}, #{media_flag})
+	</insert>
+	<select id="selectCustomerServiceBoardWriteListByCategoryId" resultType="com.kjh.aps.domain.BoardDTO">
+		SELECT nc_list.* FROM
+			(SELECT
+				@rownum:=@rownum+1 as no, nc.*
+			FROM
+				(SELECT
+					n.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+					((SELECT count(id) FROM notice_comment WHERE notice_id = n.id AND status = 1) + (SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE notice_id = n.id) AND status = 1)) commentCount
+				FROM
+					notice n INNER JOIN user u ON n.user_id = u.id
+				WHERE
+					(n.category_id = #{category_id} AND n.status = 1) ORDER BY n.id DESC) nc, (SELECT @rownum:=0) rownum) nc_list
+		WHERE nc_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+	</select>
+	<select id="selectCustomerServiceBoardWriteListCountByMap" resultType="Integer">
+		SELECT count(n.id) FROM (SELECT * FROM notice WHERE category_id = #{category_id}) n WHERE n.status = 1
+	</select>
+	<insert id="insertCustomerServiceBoardWriteComment" parameterType="com.kjh.aps.domain.CommentDTO">
+		INSERT INTO notice_comment(notice_id, user_id, ip, content) VALUES(#{notice_id}, #{user_id}, #{ip}, #{content})
+	</insert>
+	<select id="selectCustomerServiceBoardWriteCommentListByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT nc_n_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, nc_n.*
+					FROM
+						(SELECT
+							nc.*
+						FROM
+							(SELECT
+								n.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id = n.id AND status = 1) replyCount,
+								(SELECT t.type FROM (SELECT * FROM notice_comment_recommend_history) t WHERE t.notice_comment_id = n.id AND (t.user_id = #{user_id} OR t.ip = #{ip})) type
+							FROM
+								notice_comment n INNER JOIN user u ON n.user_id = u.id) nc
+						WHERE
+							((nc.notice_id = #{notice_id} AND nc.status = 1) AND ((nc.up - nc.down) >= #{order})) OR ((nc.notice_id = #{notice_id} AND nc.status = 0 AND nc.replyCount != 0) AND ((nc.up - nc.down) >= #{order})) ORDER BY (nc.up - nc.down) DESC) nc_n, (SELECT @rownum:=0) rownum) nc_n_list
+				WHERE nc_n_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT nc_n_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, nc_n.*
+					FROM
+						(SELECT
+							nc.*
+						FROM
+							(SELECT
+								n.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+								(SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id = n.id AND status = 1) replyCount,
+								(SELECT t.type FROM (SELECT * FROM notice_comment_recommend_history) t WHERE t.notice_comment_id = n.id AND (t.user_id = #{user_id} OR t.ip = #{ip})) type
+							FROM
+								notice_comment n INNER JOIN user u ON n.user_id = u.id) nc
+						WHERE
+							(nc.notice_id = #{notice_id} AND nc.status = 1) OR ((nc.notice_id = #{notice_id} AND nc.status = 0 AND nc.replyCount != 0)) ORDER BY nc.id DESC) nc_n, (SELECT @rownum:=0) rownum) nc_n_list
+				WHERE nc_n_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCustomerServiceBoardWriteCommentListCountByMap" resultType="Integer">
+		<choose>
+			<when test='listType != null and listType.equals("popular")'>
+				SELECT count(nc.id) FROM
+					(SELECT n.*,
+						(SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id = n.id AND status = 1) replyCount
+					FROM
+						notice_comment n WHERE n.notice_id = #{notice_id}) nc
+				WHERE ((nc.status = 1) OR (nc.status = 0 AND nc.replyCount != 0)) AND (nc.up - nc.down) >= #{order}
+			</when>
+			<otherwise>
+				SELECT count(nc.id) FROM
+					(SELECT n.*,
+						(SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id = n.id AND status = 1) replyCount
+					FROM
+						notice_comment n WHERE n.notice_id = #{notice_id}) nc
+				WHERE ((nc.status = 1) OR (nc.status = 0 AND nc.replyCount != 0))
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCustomerServiceBoardWriteViewCountById" resultType="Integer">
+		SELECT view FROM notice WHERE id = #{param1}
+	</select>
+	<update id="updateCustomerServiceBoardWriteViewCount">
+		UPDATE notice SET view = view + 1 WHERE id = #{param1}
+	</update>
+	<select id="selectCustomerServiceBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		SELECT n.* FROM (SELECT * FROM notice WHERE category_id = #{category_id}) n WHERE n.id = #{id} AND n.user_id = #{user_id} AND n.status = 1
+	</select>
+	<update id="updateCustomerServiceBoardWrite">
+		UPDATE notice SET ip = #{ip}, subject = #{subject}, content = #{content}, image_flag = #{image_flag}, media_flag = #{media_flag}, category_id = #{category_id} WHERE (category_id = #{category_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<delete id="deleteCustomerServiceBoardWrite">
+		UPDATE notice SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (category_id = #{category_id}) AND id = #{id} AND user_id = #{user_id}
+	</delete>
+	<select id="selectCustomerServiceBoardWriteCommentByMap" resultType="com.kjh.aps.domain.CommentDTO">
+		SELECT n.* FROM (SELECT * FROM notice_comment WHERE notice_id = #{notice_id}) n WHERE n.id = #{id} AND n.user_id = #{user_id} AND n.status = 1
+	</select>
+	<update id="updateCustomerServiceBoardWriteComment">
+		UPDATE notice_comment SET ip = #{ip}, content = #{content} WHERE (notice_id = #{notice_id}) AND id = #{id} AND user_id = #{user_id} AND status = 1
+	</update>
+	<select id="selectCustomerServiceBoardWriteCommentRecommendHistoryByMap" resultType="Integer">
+		SELECT n.type FROM (SELECT * FROM notice_comment_recommend_history WHERE notice_comment_id = #{id}) n WHERE (n.user_id = #{user_id} OR n.ip = #{ip})
+	</select>
+	<update id="updateCustomerServiceBoardWriteCommentRecommend">
+		<choose>
+			<when test='type.equals("up")'>
+				UPDATE notice_comment SET up = up + 1 WHERE id = #{id} AND status = 1
+			</when>
+			<when test='type.equals("down")'>
+				UPDATE notice_comment SET down = down + 1 WHERE id = #{id} AND status = 1
+			</when>
+		</choose>
+	</update>
+	<insert id="insertCustomerServiceBoardWriteCommentRecommendHistory">
+		<choose>
+			<when test='type.equals("up")'>
+				INSERT INTO notice_comment_recommend_history(notice_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 1)
+			</when>
+			<when test='type.equals("down")'>
+				INSERT INTO notice_comment_recommend_history(notice_comment_id, user_id, ip, type) VALUES(#{id}, #{user_id}, #{ip}, 2)
+			</when>
+		</choose>
+	</insert>
+	<update id="deleteCustomerServiceBoardWriteComment">
+		UPDATE notice_comment SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (notice_id = #{notice_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<insert id="insertCustomerServiceBoardWriteCommentReply" parameterType="com.kjh.aps.domain.CommentReplyDTO">
+		INSERT INTO notice_comment_reply(notice_comment_id, user_id, ip, content) VALUES(#{notice_comment_id}, #{user_id}, #{ip}, #{content})
+	</insert>
+	<select id="selectCustomerServiceBoardWriteCommentReplyLisByMap" resultType="com.kjh.aps.domain.CommentReplyDTO">
+		SELECT nr_n_list.* FROM
+			(SELECT
+				@rownum:=@rownum+1 as no, nr_n.*
+			FROM
+				(SELECT
+					nr.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType
+				FROM
+					notice_comment_reply nr INNER JOIN user u ON nr.user_id = u.id
+				WHERE
+					nr.notice_comment_id = #{notice_comment_id} AND nr.status = 1 ORDER BY nr.id ASC) nr_n, (SELECT @rownum:=0) rownum) nr_n_list
+		WHERE nr_n_list.no BETWEEN #{page} AND #{row}
+	</select>
+	<select id="selectCustomerServiceBoardWriteCommentReplyCountByNoticeCommentId" resultType="Integer">
+		SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id = #{param1} AND status = 1
+	</select>
+	<update id="deleteCustomerServiceBoardWriteCommentReply">
+		UPDATE notice_comment_reply SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (notice_comment_id = #{notice_comment_id}) AND id = #{id} AND user_id = #{user_id}
+	</update>
+	<select id="selectCustomerServiceSearchBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+		<choose>
+			<when test="searchType == 1">
+				SELECT ns_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, ns.*
+					FROM
+						(SELECT
+							n.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM notice_comment WHERE notice_id = n.id AND status = 1) + (SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE notice_id = n.id) AND status = 1)) commentCount
+						FROM
+							notice n INNER JOIN user u ON n.user_id = u.id
+						WHERE
+							(n.category_id = #{category_id} AND n.status = 1) AND (n.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR n.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+						ORDER BY n.id DESC) ns, (SELECT @rownum:=0) rownum) ns_list
+				WHERE ns_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</when>
+			<otherwise>
+				SELECT ns_list.* FROM
+					(SELECT
+						@rownum:=@rownum+1 as no, ns.*
+					FROM
+						(SELECT
+							n.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+							((SELECT count(id) FROM notice_comment WHERE notice_id = n.id AND status = 1) + (SELECT count(id) FROM notice_comment_reply WHERE notice_comment_id IN (SELECT id FROM notice_comment WHERE notice_id = n.id) AND status = 1)) commentCount
+						FROM
+							notice n INNER JOIN user u ON n.user_id = u.id
+						WHERE
+							(n.category_id = #{category_id} AND n.status = 1) AND (n.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR n.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+						ORDER BY n.id DESC) ns, (SELECT @rownum:=0) rownum) ns_list
+				WHERE ns_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+			</otherwise>
+		</choose>
+	</select>
+	<select id="selectCustomerServiceSearchBoardWriteCount" resultType="Integer">
+		<choose>
+			<when test="searchType == 1">
+				SELECT count(id) FROM notice WHERE (category_id = #{category_id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+			</when>
+			<otherwise>
+				SELECT count(id) FROM notice WHERE (category_id = #{category_id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
+			</otherwise>
+		</choose>
+	</select>
+</mapper>

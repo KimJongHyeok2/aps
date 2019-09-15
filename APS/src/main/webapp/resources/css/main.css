@@ -1,0 +1,253 @@
+@charset "UTF-8";
+/* 메인 페이지 CSS */
+.content-wrapper .content-inner {
+	max-width: 1000px;
+	margin: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.content-wrapper .content-inner .margin-top {
+	margin-top: 20px;
+}
+.content-wrapper .content-inner .container-fluid {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .today-aps-section, .week-aps-section, .board-section, .notice-section {
+	margin-left: 10px;
+}
+.content-wrapper .content-inner .container-fluid .title {
+	font-family: "나눔스퀘어";
+	color: dimgray;
+}
+.content-wrapper .content-inner .container-fluid .title h4 {
+	margin: 0;
+}
+.content-wrapper .content-inner .container-fluid .row {
+	margin: 0;
+}
+.content-wrapper .content-inner .container-fluid .card-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card {
+	position: relative;
+	font-family: "나눔스퀘어";
+	margin-top: 10px;
+	margin-right: 10px;
+	border: 1px solid #EAEAEA;
+	border-radius: 0;
+	transition-property: border;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card:hover {
+	border: 1px solid #0545B1;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-img {
+	height: 230px;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-img .img-fluid {
+	width: 100%;
+	height: 100%;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-name {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 5px;
+	font-size: 15pt;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-ps {
+	text-align: right;
+	padding: 5px;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-ps .fa-star {
+	color: #F2CB61;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-ps .ps {
+	font-size: 20pt;
+}
+.content-wrapper .content-inner .container-fluid .card-box .card .profile-best {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list {
+	list-style-type: none;
+	margin: 0;
+	margin-top: 10px;
+	margin-right: 10px;
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid #EAEAEA;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default {
+	padding: 10px;
+	border-bottom: 1px solid #EAEAEA;
+	transition-property: background-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default.last-list {
+	border-bottom: none;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default:hover {
+	background-color: rgba(246, 246, 246, 0.4);
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .subject {
+	max-width: 65%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .subject:hover {
+	text-decoration: underline;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .comment-count {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .icon-box {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .other-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .other-box div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .other-box .level {
+	width: 45px;
+	text-align: center;
+	margin-left: 2px;
+	padding: 0 2px;
+	border: 1px solid #0545B1;
+	border-radius: 5px;
+	color: #0545B1;
+	font-weight: bold;
+}
+.content-wrapper .content-inner .container-fluid .notice-more-section {
+	text-align: right;
+	margin: 0 10px;
+	color: gray;
+}
+.content-wrapper .content-inner .container-fluid .notice-more-section.margin-top {
+	margin-top: 7.5px;
+}
+.content-wrapper .content-inner .container-fluid .notice-more-section span {
+	transition-property: color;
+	transition-duration: 0.5s;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .container-fluid .notice-more-section span:hover {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .container-fluid .notice-section {
+	margin-right: 10px;
+	padding: 10px;
+	border: 1px solid #EAEAEA;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .notice-list {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .type-box {
+	padding: 0;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .type-box .type-normal {
+	min-width: 40px;
+	text-align: center;
+	border: 1px solid #0545B1;
+	border-radius: 5px;
+	background-color: #0545B1;
+	color: white;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box {
+	flex-grow: 1;
+	padding-left: 5px;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box div {
+	display: inline-block;
+	vertical-align: middle;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box .subject {
+	max-width: 70%;
+	padding-right: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box .subject:hover {
+	text-decoration: underline;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box .comment-count {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .subject-box .icon-box {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .container-fluid .notice-section .regdate-box {
+	padding-right: 0;
+	text-align: center;
+	color: gray;
+}
+
+/* 메인 페이지 반응형 */
+@media(max-width:767px) {
+	.content-wrapper .content-inner .container-fluid .notice-section .regdate-box {
+		display: none;
+	}
+	.content-wrapper .content-inner .container-fluid .card-box.bronze {
+		margin: auto;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .other-box .level {
+		width: 40px;
+	}
+	.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .subject {
+		max-width: 75%;
+	}
+	.content-wrapper .content-inner .container-fluid .notice-more-section {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .container-fluid .notice-section {
+		font-size: 14px;
+	}
+	.content-wrapper .content-inner .container-fluid .notice-section .subject-box .subject {
+		max-width: 75%;
+	}
+	.content-wrapper .content-inner .container-fluid .card-box .card .profile-img {
+		height: auto;
+	}
+	.title h4 {
+		font-size: 20px;
+	}
+}
+@media(max-width:420px) {
+	.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .icon-box {
+		display: none;
+	}
+	.content-wrapper .content-inner .container-fluid .notice-section .subject-box .icon-box {
+		display: none;
+	}
+	.content-wrapper .content-inner .container-fluid .board-section .board-box .board-list .bl-default .subject-box .subject {
+		max-width: 87%;
+	}
+	.content-wrapper .content-inner .container-fluid .notice-section .subject-box .subject {
+		max-width: 85%;
+	}
+}

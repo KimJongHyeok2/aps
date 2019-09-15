@@ -1,0 +1,86 @@
+@charset "UTF-8";
+/* 회원가입 약관동의 페이지 CSS */
+.content-wrapper {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 800px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .policy-logo {
+	text-align: center;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-title {
+	margin: 5px 0;
+	font-family: "나눔스퀘어";
+	font-size: 15pt;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-title span {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-content {
+	height: 200px;
+	padding: 10px;
+	overflow: auto;
+	border: 1px solid #D5D5D5;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-content span {
+	font-weight: bold;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .custom-checkbox {
+	margin: 5px 0;
+	text-align: right;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .custom-checkbox .custom-checkbox-label {
+	cursor: pointer;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .custom-checkbox .custom-checkbox-label .fa-check {
+	color: lightgray;
+	transition-property: color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .custom-checkbox .custom-checkbox-label.active .fa-check {
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .aps-button {
+	width: 100%;
+	height: 50px;
+	margin-top: 5px;
+	background-color: white;
+	border: 1px solid #D5D5D5;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .aps-button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .policy-content .aps-button:active {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+
+/* 약관동의 페이지 반응형 */
+@media(max-width:800px) {
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 10px;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .policy-logo img {
+		max-width: 170px;		
+	}
+	.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-title {
+		font-size: 18px;
+	}
+	.content-wrapper .content-inner .content-inner-box .policy-content .policy-content-content {
+		font-size: 14px;
+	}
+}
