@@ -1,6 +1,40 @@
 ## Demo
 <img src="https://user-images.githubusercontent.com/47962660/64924783-34097200-d823-11e9-8ffe-6c06e37c42f1.gif"/>
 
+## Login(Client)
+<pre>
+// 로그인 유효성 검사
+function validLogin(obj) {
+  var username = obj["username"].value;
+  var password = obj["password"].value;
+	
+  if(username == null || username.length == 0) {
+    modalToggle("#modal-type-1", "안내", "아이디를 입력해주세요.");
+    return false;
+  }
+  if(password == null || password.length == 0) {
+    modalToggle("#modal-type-1", "안내", "비밀번호를 입력해주세요.");
+    return false;
+  }
+}
+
+&lt;form id="loginForm" action="&lt;c:url value='/loginOk'/&gt;" method="post" onsubmit="return validLogin(this);"&gt;
+  &lt;div class="input-box"&gt;
+    &lt;input type="text" id="username" name="username" placeholder="아이디" autocomplete="off"/&gt;
+  &lt;/div&gt;
+  &lt;div class="input-box"&gt;
+    &lt;input type="password" id="password" name="password" placeholder="비밀번호" autocomplete="off"/&gt;
+  &lt;/div&gt;
+  &lt;div class="input-box"&gt;
+    &lt;button class="aps-button"&gt;로그인&lt:/button&gt;
+  &lt;/div&gt;
+  &lt;s:csrfInput/&gt;
+&lt;/form&gt;
+</pre>
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/login/login.jsp">login.jsp</a>
+</pre>
+
 ## SecurityContext
 <pre>
 &lt;security:http use-expressions="true">
