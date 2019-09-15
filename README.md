@@ -32,7 +32,7 @@
     BJ 게시판
     <ul>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardWrite.md">등록</a></li>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/oardList.md">목록</a</li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardList.md">목록</a</li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardUpdate.md">수정</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardDelete.md">삭제</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardView.md">상세보기</a></li>
