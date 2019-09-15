@@ -217,6 +217,11 @@ public String getAuthorizationUrl() {
 </pre>
 ## LoginController
 <pre>
+@Inject
+private NaverLoginBO naverLoginBO;
+@Inject
+private GoogleLoginBO googleLoginBO;
+
  // 로그인 페이지
  @RequestMapping("")
  public String login(HttpSession session, Model model) {
@@ -321,6 +326,9 @@ $(document).ready(function() {
 </pre>
 ## JoinController
 <pre>
+@Inject
+private JoinService joingService;
+
 // 소셜 회원가입
 @PostMapping("/input/socialUser")
 public @ResponseBody SocialLoginDTO joinSocialUser(SocialLoginDTO dto, BindingResult result) {
