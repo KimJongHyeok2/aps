@@ -1,6 +1,6 @@
 ## Demo
-<h5>회원 전용 BJ 게시판 글 등록입니다.</h5?
-<img src="https://user-images.githubusercontent.com/47962660/64926988-8062ab00-d83f-11e9-8660-9328352e6f4b.gif"/>
+<h5>회원 전용 BJ 게시판 글 등록입니다.</h5>
+<img src="https://user-images.githubusercontent.com/47962660/64928314-86fa1e00-d851-11e9-800c-1f9e252d45b5.gif"/>
 
 ## ServletContext
 <pre>
