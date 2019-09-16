@@ -1416,7 +1416,7 @@ public class CommunityController {
 		return "community/board/board_view";
 	}
 	
-	// 방송인 커뮤니티 게시판 글 댓글 추천
+	// 방송인 커뮤니티 게시판 글 추천
 	@PostMapping("/board/recommend")
 	public @ResponseBody String boardRecommend(@RequestParam(value = "id", defaultValue = "0") int id,
 			String broadcasterId, String type, HttpServletRequest request) {
