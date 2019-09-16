@@ -108,48 +108,51 @@ public String login(HttpSession session, Model model) {
 </pre>
 ## CustomUserDetailService
 ```java
-@Inject
-private SqlSession sqlSession;
-	
-public SqlSession getSqlSession() {
-  return sqlSession;
-}
+public class CustomUserDetailsService implements UserDetailsService {
 
-@Override
-public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
-		
-  LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-		
-  CustomUserDetails userDetails = dao.selectUserByUsername(arg0);
+  @Inject
+  private SqlSession sqlSession;
 
-  if(userDetails == null) {
-    throw new InternalAuthenticationServiceException(arg0);
-  } else {
-    return userDetails;
-	}
-		
-}
-	
-public void updateSocialUserPassword(int id) throws RuntimeException {
-  Random ran = new Random();
-  StringBuffer sb = new StringBuffer();
-  int num = 0;
-		
-  do {
-    num = ran.nextInt(75) + 48;
-			
-    if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
-      sb.append((char) num);
-    } else {
-      continue;
-    }
-  } while (sb.length() < 20);
-    Map<String, String> map = new HashMap<>();
-    map.put("id", String.valueOf(id));
-    map.put("password", "{noop}" + sb.toString());
-		
+  public SqlSession getSqlSession() {
+    return sqlSession;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
+
     LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-    dao.updateSocialUserPassword(map);
+
+    CustomUserDetails userDetails = dao.selectUserByUsername(arg0);
+
+    if(userDetails == null) {
+      throw new InternalAuthenticationServiceException(arg0);
+    } else {
+      return userDetails;
+    }
+
+  }
+
+  public void updateSocialUserPassword(int id) throws RuntimeException {
+    Random ran = new Random();
+    StringBuffer sb = new StringBuffer();
+    int num = 0;
+
+    do {
+      num = ran.nextInt(75) + 48;
+
+      if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+        sb.append((char) num);
+      } else {
+        continue;
+      }
+    } while (sb.length() < 20);
+      Map<String, String> map = new HashMap<>();
+      map.put("id", String.valueOf(id));
+      map.put("password", "{noop}" + sb.toString());
+
+      LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
+      dao.updateSocialUserPassword(map);
+  }
 }
 ```
 <pre>
