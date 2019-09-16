@@ -29,7 +29,7 @@ public String boardView(@PathVariable int id, String broadcasterId,
     map.put("ip", ip);
     map.put("listType", listType);
     map.put("order", String.valueOf(BOARD_POPULAR_ORDER));
-    map.put("view", "false");
+    map.put("view", "true");
     map.put("pageBlock", String.valueOf(COMMENT_PAGEBLOCK));
 			
     Map<String, Object> maps = communityService.selectBoardWriteViewByMap(map);
