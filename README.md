@@ -31,7 +31,7 @@
   <li>
     마이페이지
     <ul>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-push.md">내가 등록한 게시글 및 댓글 알림</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-push.md">내 게시글 댓글 및 답글 알림</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-profile.md">프로필 수정</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-level.md">회원 레벨 Up/Down</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-leave.md">회원탈퇴</a></li>
