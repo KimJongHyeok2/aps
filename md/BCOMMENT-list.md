@@ -1,4 +1,5 @@
 ## Demo
+<h5>등록된 댓글을 최신/인기순으로 정렬할 수 있습니다.</h5>
 <img src="https://user-images.githubusercontent.com/47962660/64956909-a8e1b800-d8c6-11e9-9fd3-fa207df6d72d.gif"/>
 
 ## BoardView(Client)
