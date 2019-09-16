@@ -3,19 +3,19 @@
 <img src="https://user-images.githubusercontent.com/47962660/64928314-86fa1e00-d851-11e9-800c-1f9e252d45b5.gif"/>
 
 ## ServletContext
-<pre>
-&lt;util:properties id="s3Properties" location="classpath:s3.properties"/&gt;
+```xml
+<util:properties id="s3Properties" location="classpath:s3.properties"/>
 
-&lt;beans:bean name="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"&gt;
-  &lt;beans:property name="maxUploadSize" value="3145728"/&gt;
-  &lt;beans:property name="maxInMemorySize" value="10000000"/&gt;
-&lt;/beans:bean&gt;
-</pre>
+<beans:bean name="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+  <beans:property name="maxUploadSize" value="3145728"/>
+  <beans:property name="maxInMemorySize" value="10000000"/>
+</beans:bean>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml">ServletContext.xml</a>
 </pre>
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 
@@ -164,12 +164,12 @@ public @ResponseBody ImageDTO boardWriteImageUpload(MultipartHttpServletRequest 
 		
     return image;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
 
@@ -197,35 +197,35 @@ public Map<String, Object> insertBoardWrite(BoardDTO dto) throws Exception { // 
 </pre>
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
-</pre>
+```
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;insert id="insertBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id"&gt;
-    &lt;choose&gt;
-      &lt;when test="board_type != null"&gt;
-        &lt;choose&gt;
-          &lt;when test='board_type.equals("non")'&gt;
+```xml
+<mapper namespace="community">
+  <insert id="insertBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    <choose>
+      <when test="board_type != null">
+        <choose>
+          <when test='board_type.equals("non")'>
             INSERT INTO combine_board(nickname, password, ip, subject, content, image_flag, media_flag, type)
             VALUE(#{nickname}, #{password}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag}, #{board_type})
-          &lt;/when&gt;
-          &lt;when test='board_type.equals("user") and user_id != 0'&gt;
+          </when>
+          <when test='board_type.equals("user") and user_id != 0'>
             INSERT INTO combine_board(user_id, nickname, profile, level, ip, subject, content, image_flag, media_flag, user_type, type)
             VALUE(#{user_id}, #{nickname}, #{profile}, #{level}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag}, #{userType}, #{board_type})
-          &lt;/when&gt;
-        &lt;/choose&gt;
-      &lt;/when&gt;
-      &lt;otherwise&gt;
+          </when>
+        </choose>
+      </when>
+      <otherwise>
         INSERT INTO broadcaster_board(broadcaster_id, user_id, ip, subject, content, image_flag, media_flag)
         VALUE(#{broadcaster_id}, #{user_id}, #{ip}, #{subject}, #{content}, #{image_flag}, #{media_flag})
-      &lt;/otherwise&gt;
-    &lt;/choose&gt;
-  &lt;/insert&gt;
-  &lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
+      </otherwise>
+    </choose>
+  </insert>
+  <select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO">
     SELECT * FROM broadcaster WHERE id = #{param1}
-  &lt;/select&gt;
-&lt;/mapper&gt;
-</pre>
+  </select>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
