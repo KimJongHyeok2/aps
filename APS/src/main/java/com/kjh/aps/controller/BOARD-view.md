@@ -7,8 +7,6 @@
 private CommunityService communityService;
 private final int BOARD_PAGEBLOCK = 5;
 private final int BOARD_POPULAR_ORDER = 20;
-private final int COMMENT_PAGEBLOCK = 5;
-private final int COMMENT_POPULAR_ORDER = 20;
   
 // 방송인 커뮤니티 게시판 글 상세보기
 @GetMapping("/board/view/{id}")
