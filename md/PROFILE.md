@@ -1,8 +1,20 @@
 ## Demo
 <img src="https://user-images.githubusercontent.com/47962660/64925650-ded35d80-d82e-11e9-8add-2906a0831196.gif"/>
 
-## MyPage(Client)
+## ServletContext
+```xml
+<util:properties id="s3Properties" location="classpath:s3.properties"/>
+
+<beans:bean name="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+  <beans:property name="maxUploadSize" value="3145728"/>
+  <beans:property name="maxInMemorySize" value="10000000"/>
+</beans:bean>
+```
 <pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml">ServletContext.xml</a>
+</pre>
+## MyPage(Client)
+```javascript
 function modifyNickname(nickname) {
   var nickname = nickname.val();
   var pattern_spc = /^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*$/;
@@ -92,12 +104,12 @@ function modifyProfileImage(obj) {
     }
   });
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/mypage/mypage.jsp">mypage.jsp</a>
 </pre>
 ## MyPageController
-<pre>
+```java
 @Inject
 private MyPageService mypageService;
 	
@@ -207,12 +219,12 @@ public @ResponseBody String modifyProfileImage(MultipartHttpServletRequest multi
 		
   return result;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/MyPageController.java">MyPageController.java</a>
 </pre>
 ## MyPageServiceImpl
-<pre>
+```java
 @Inject
 private MyPageDAO dao;
 
@@ -261,21 +273,21 @@ public String updateUserProfileImage(Map<String, String> map) throws Exception {
 		
   return result;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/MyPageServiceImpl.java">MyPageServiceImpl.java</a>
 </pre>
 ## MyPageMapper
-<pre>
-&lt;mapper namespace="mypage"&gt;
-  &lt;update id="updateUserNickname"&gt;
+```xml
+<mapper namespace="mypage">
+  <update id="updateUserNickname">
     UPDATE user SET nickname = #{nickname} WHERE id = #{id}
-  &lt;/update&gt;
-  &lt;update id="updateUserProfileImage"&gt;
+  </update>
+  <update id="updateUserProfileImage">
     UPDATE user SET profile = #{profile} WHERE id = #{id}
-  &lt;/update&gt;
-&lt;/mapper&gt;
-</pre>
+  </update>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/MyPageDAO.xml">MyPageDAO.xml</a>
 </pre>
