@@ -290,6 +290,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 </pre>
 ## LoginMapper
 ```xml
+<mapper namespace="com.kjh.aps.persistent.LoginDAO">
   <select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails">
     SELECT id, username, password, nickname, profile, level, type, auth, enabled, status FROM user WHERE username = #{param1}
   </select>
@@ -318,6 +319,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
   <update id="updateSocialUserPassword">
     UPDATE user SET password = #{password} WHERE id = #{id}
   </update>
+</mapper>
 ```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/LoginDAO.xml">LoginDAO.xml</a>
