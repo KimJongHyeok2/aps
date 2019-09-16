@@ -172,3 +172,51 @@ public String updateBoardWriteRecommend(Map<String, String> map) throws Exceptio
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
+## CommonServiceImpl
+```java
+@Inject
+private CommonDAO dao;
+
+private final int EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY = 1;
+
+@Override
+@Transactional(isolation=Isolation.READ_COMMITTED)
+@Scheduled(cron="0 0 0 * * *")
+public void deleteExpireRecommendHistory() throws Exception {  // 보관 기한이 만료된 추천 기록들 영구삭제
+  dao.deleteExpireBroadcasterBoardWriteRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+  dao.deleteExpireBroadcasterBoardWriteCommentRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+  dao.deleteExpireBroadcasterReviewRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+  dao.deleteExpireCustomerServiceCommentRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+  dao.deleteExpireCombineBoardWriteRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+  dao.deleteExpireCombineBoardWriteCommentRecommendHistory(EXPIRE_DELETE_DAY_TYPE_RECOMMEND_HISTORY);
+}
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommonServiceImpl.java">CommonServiceImpl.java</a>
+</pre>
+## CommonMapper
+```xml
+<mapper namespace="common">
+  <delete id="deleteExpireBroadcasterBoardWriteRecommendHistory">
+    DELETE FROM broadcaster_board_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_board_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBroadcasterBoardWriteCommentRecommendHistory">
+    DELETE FROM broadcaster_board_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_board_comment_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBroadcasterReviewRecommendHistory">
+    DELETE FROM broadcaster_review_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM broadcaster_review_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireCustomerServiceCommentRecommendHistory">
+    DELETE FROM notice_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM notice_comment_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireCombineBoardWriteRecommendHistory">
+    DELETE FROM combine_board_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM combine_board_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireCombineBoardWriteCommentRecommendHistory">
+    DELETE FROM combine_board_comment_recommend_history WHERE id IN (SELECT r.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM combine_board_comment_recommend_history) r WHERE r.datediff >= #{param1})
+  </delete>
+</mapper>
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommonDAO.xml">CommonDAO.xml</a>
+</pre>
