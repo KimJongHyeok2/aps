@@ -5,55 +5,57 @@
 <img src="https://user-images.githubusercontent.com/47962660/64925032-d0cd0f00-d825-11e9-9635-47b1b57b1b4b.gif"/>
 
 ## Login(Client)
-<pre>
+```javascript
 function socialLoginPopUp(url) {
   var pop = window.open(url, "pop", "width=600,height=600, scrollbars=yes, resizable=yes");
 }
-
-&lt;div class="social-wrapper"&gt;
-  &lt;div class="title-box margin-top">간편하게 로그인해보세요!&lt;/div&gt;
-    &lt;div class="social-box margin-top"&gt;
-      &lt;img class="social-login naver" onclick="socialLoginPopUp('${naverUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/naver.PNG"&gt;
-      &lt;img class="social-login" onclick="socialLoginPopUp('${googleUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/google.png"/&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-</pre>
+```
+```html
+<div class="social-wrapper">
+  <div class="title-box margin-top">간편하게 로그인해보세요!</div>
+    <div class="social-box margin-top">
+      <img class="social-login naver" onclick="socialLoginPopUp('${naverUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/naver.PNG">
+      <img class="social-login" onclick="socialLoginPopUp('${googleUrl}');" src="${pageContext.request.contextPath}/resources/image/icon/google.png"/>
+    </div>
+</div>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/login/login.jsp">login.jsp</a>
 </pre>
 ## ServletContext
-<pre>
-&lt;!-- Naver Login --&gt;
-&lt;beans:bean name="naverLoginBO" class="com.kjh.aps.util.NaverLoginBO"&gt;
-  &lt;beans:constructor-arg index="0" value="${naver.clientId}"/&gt;
-  &lt;beans:constructor-arg index="1" value="${naver.clientSecret}"/&gt;
-  &lt;beans:constructor-arg index="2" value="${naver.redirectUrl}"/&gt;
-  &lt;beans:constructor-arg index="3" value="${naver.sessionState}"/&gt;
-  &lt;beans:constructor-arg index="4" value="${naver.profileApiUrl}"/&gt;
-&lt;/beans:bean&gt;
-<!-- Google Login -->
-&lt;beans:bean name="googleOAuth2Template" class="org.springframework.social.google.connect.GoogleOAuth2Template"&gt;
-  &lt;beans:constructor-arg value="${google.clientId}"/&gt;
-  &lt;beans:constructor-arg value="${google.clientSecret}"/&gt;
-&lt;/beans:bean&gt;
+```xml
+  <!-- Naver Login -->
+  <beans:bean name="naverLoginBO" class="com.kjh.aps.util.NaverLoginBO">
+    <beans:constructor-arg index="0" value="${naver.clientId}"/>
+    <beans:constructor-arg index="1" value="${naver.clientSecret}"/>
+    <beans:constructor-arg index="2" value="${naver.redirectUrl}"/>
+    <beans:constructor-arg index="3" value="${naver.sessionState}"/>
+    <beans:constructor-arg index="4" value="${naver.profileApiUrl}"/>
+  </beans:bean>
 
-&lt;beans:bean name="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters"&gt;
-  &lt;beans:property name="scope" value="${google.scope}"/&gt;
-  &lt;beans:property name="redirectUri" value="${google.redirectUrl}"/&gt;
-&lt;/beans:bean&gt;
-
-&lt;beans:bean name="googleLoginBO" class="com.kjh.aps.util.GoogleLoginBO"&gt;
-  &lt;beans:constructor-arg index="0" ref="googleOAuth2Template"/&gt;
-  &lt;beans:constructor-arg index="1" ref="googleOAuth2Parameters"/&gt;
-  &lt;beans:constructor-arg index="2" value="${google.clientId}"/&gt;
-  &lt;beans:constructor-arg index="3" value="${google.clientSecret}"/&gt;
-&lt;/beans:bean&gt;
-</pre>
+  <!-- Google Login -->
+  <beans:bean name="googleOAuth2Template" class="org.springframework.social.google.connect.GoogleOAuth2Template">
+    <beans:constructor-arg value="${google.clientId}"/>
+    <beans:constructor-arg value="${google.clientSecret}"/>
+  </beans:bean>
+	
+  <beans:bean name="googleOAuth2Parameters" class="org.springframework.social.oauth2.OAuth2Parameters">
+    <beans:property name="scope" value="${google.scope}"/>
+    <beans:property name="redirectUri" value="${google.redirectUrl}"/>
+  </beans:bean>
+	
+  <beans:bean name="googleLoginBO" class="com.kjh.aps.util.GoogleLoginBO">
+    <beans:constructor-arg index="0" ref="googleOAuth2Template"/>
+    <beans:constructor-arg index="1" ref="googleOAuth2Parameters"/>
+    <beans:constructor-arg index="2" value="${google.clientId}"/>
+    <beans:constructor-arg index="3" value="${google.clientSecret}"/>
+  </beans:bean>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml">ServletContext.xml</a>
 </pre>
 ## NaverLoginApi
-<pre>
+```java
 public class NaverLoginApi extends DefaultApi20 {
 
   protected NaverLoginApi() { }
@@ -76,12 +78,12 @@ public class NaverLoginApi extends DefaultApi20 {
     return "https://nid.naver.com/oauth2.0/authorize";
   }
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/util/NaverLoginApi.java">NaverLoginApi.java</a>
 </pre>
 ## NaverLoginBO
-<pre>
+```java
 private String clientId;
 private String clientSecret;
 private String redirectUrl;
@@ -159,12 +161,12 @@ public String getUserProfile(OAuth2AccessToken oauthToken) throws IOException {
 		
   return response.getBody();
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/util/NaverLoginBO.java">NaverLoginBO.java</a>
 </pre>
 ## GoogleLoginBO
-<pre>
+```java
 private GoogleOAuth2Template googleOAuth2Template;
 private OAuth2Parameters googleOAuth2Parameters;
 	
@@ -211,12 +213,12 @@ public String getAuthorizationUrl() {
 		
   return mapper.readValue(body, Map.class);
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/util/GoogleLoginBO.java">GoogleLoginBO.java</a>
 </pre>
 ## LoginController
-<pre>
+```java
 @Inject
 private NaverLoginBO naverLoginBO;
 @Inject
@@ -280,12 +282,12 @@ public String naverLogin(String code, String state, HttpSession session, Model m
 		
   return "login/callback";
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/LoginController.java">LoginController.java</a>
 </pre>
 ## Callback(Client)
-<pre>
+```javascript
 var header = $("meta[name='_csrf_header']").attr("content");
 var token = $("meta[name='_csrf']").attr("content");
 $(document).ready(function() {
@@ -320,12 +322,12 @@ $(document).ready(function() {
     $("#modal-type-1 .aps-modal-footer .aps-modal-button").attr("onclick", "window.close();");
   }
 });
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/login/callback.jsp">callback.jsp</a>
 </pre>
 ## JoinController
-<pre>
+```java
 @Inject
 private JoinService joingService;
 
@@ -349,12 +351,12 @@ if(validation.supports(dto.getClass())) {
 		
   return dto;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/JoinController.java">JoinController.java</a>
 </pre>
 ## JoinServiceImpl
-<pre>
+```java
 @Inject
 private JoinDAO dao;
 
@@ -393,12 +395,12 @@ public SocialLoginDTO selectUserBySocialLoginDTO(SocialLoginDTO dto) throws Exce
 		
   return user;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/JoinServiceImpl.java">joinServiceImpl.java</a>
 </pre>
 ## Login(Client)
-<pre>
+```javascript
 function socialLogin(result) {
     var results = result.split(",");
     if(results == "Already Email") {
@@ -414,203 +416,212 @@ function socialLogin(result) {
     form.submit();
   }
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/login/login.jsp">login.jsp</a>
 </pre>
 ## CustomUserDetailService
-<pre>
-@Inject
-private SqlSession sqlSession;
-	
-public SqlSession getSqlSession() {
-  return sqlSession;
-}
+```java
+public class CustomUserDetailsService implements UserDetailsService {
 
-@Override
-public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
-		
-  LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-		
-  CustomUserDetails userDetails = dao.selectUserByUsername(arg0);
+  @Inject
+  private SqlSession sqlSession;
 
-  if(userDetails == null) {
-    throw new InternalAuthenticationServiceException(arg0);
-  } else {
-    return userDetails;
-	}
-		
-}
-	
-public void updateSocialUserPassword(int id) throws RuntimeException {
-  Random ran = new Random();
-  StringBuffer sb = new StringBuffer();
-  int num = 0;
-		
-  do {
-    num = ran.nextInt(75) + 48;
-			
-    if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
-      sb.append((char) num);
-    } else {
-      continue;
-    }
-  } while (sb.length() < 20);
-    Map<String, String> map = new HashMap<>();
-    map.put("id", String.valueOf(id));
-    map.put("password", "{noop}" + sb.toString());
-		
+  public SqlSession getSqlSession() {
+    return sqlSession;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
+
     LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-    dao.updateSocialUserPassword(map);
+
+    CustomUserDetails userDetails = dao.selectUserByUsername(arg0);
+
+    if(userDetails == null) {
+      throw new InternalAuthenticationServiceException(arg0);
+    } else {
+      return userDetails;
+    }
+
+  }
+
+  public void updateSocialUserPassword(int id) throws RuntimeException {
+    Random ran = new Random();
+    StringBuffer sb = new StringBuffer();
+    int num = 0;
+
+    do {
+      num = ran.nextInt(75) + 48;
+
+      if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+        sb.append((char) num);
+      } else {
+        continue;
+      }
+    } while (sb.length() < 20);
+      Map<String, String> map = new HashMap<>();
+      map.put("id", String.valueOf(id));
+      map.put("password", "{noop}" + sb.toString());
+
+      LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
+      dao.updateSocialUserPassword(map);
+  }
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomUserDetailsService.java">CustomUserDetailsService.java</a>
 </pre>
 ## CustomAuthenticationProvider
-<pre>
-@Inject
-private CustomUserDetailsService userDetailsService;
-	
-@Override
-public Authentication authenticate(Authentication auth) throws AuthenticationException {
+```java
+public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-  String username = (String)auth.getPrincipal();
-  String password = (String)auth.getCredentials();
-		
-  CustomUserDetails userDetails = (CustomUserDetails)userDetailsService.loadUserByUsername(username);
-		
-  PasswordEncoding passowrdEncoder = new PasswordEncoding();
-		
-  if(userDetails.getType() == 1 || userDetails.getType() == 10) { // APS 회원인 경우
-    if(!passowrdEncoder.matches(password, userDetails.getPassword())) {
-      throw new BadCredentialsException(username);
+  @Inject
+  private CustomUserDetailsService userDetailsService;
+
+  @Override
+  public Authentication authenticate(Authentication auth) throws AuthenticationException {
+
+    String username = (String)auth.getPrincipal();
+    String password = (String)auth.getCredentials();
+
+    CustomUserDetails userDetails = (CustomUserDetails)userDetailsService.loadUserByUsername(username);
+
+    PasswordEncoding passowrdEncoder = new PasswordEncoding();
+
+    if(userDetails.getType() == 1 || userDetails.getType() == 10) { // APS 회원인 경우
+      if(!passowrdEncoder.matches(password, userDetails.getPassword())) {
+        throw new BadCredentialsException(username);
+      }
+    } else if(userDetails.getType() >= 2) { // 소셜 회원인 경우
+      if(!password.equals(userDetails.getPassword())) {
+        throw new BadCredentialsException(username);
+      } else {
+        userDetailsService.updateSocialUserPassword(userDetails.getId());
+      }
     }
-  } else if(userDetails.getType() >= 2) { // 소셜 회원인 경우
-    if(!password.equals(userDetails.getPassword())) {
-      throw new BadCredentialsException(username);
-    } else {
-      userDetailsService.updateSocialUserPassword(userDetails.getId());
+
+    if(userDetails.getStatus() == 3) { // 회원탈퇴 신청 회원이 30일 이내에 로그인 했다면
+      LoginDAO dao = userDetailsService.getSqlSession().getMapper(LoginDAO.class);
+      Map<String, String> map = new HashMap<>(); 
+      map.put("id", String.valueOf(userDetails.getId()));
+      map.put("type", "unlock");
+      dao.updateUserStatus(map);
+      throw new LockedException(username);
     }
+
+    if(!userDetails.isEnabled()) { // 서비스 이용 정지된 회원
+      throw new DisabledException(username);
+    }
+
+    UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+    token.setDetails(userDetails);
+
+    return token;
   }
-		
-  if(userDetails.getStatus() == 3) { // 회원탈퇴 신청 회원이 30일 이내에 로그인 했다면
-    LoginDAO dao = userDetailsService.getSqlSession().getMapper(LoginDAO.class);
-    Map<String, String> map = new HashMap<>(); 
-    map.put("id", String.valueOf(userDetails.getId()));
-    map.put("type", "unlock");
-    dao.updateUserStatus(map);
-    throw new LockedException(username);
-  }
-		
-  if(!userDetails.isEnabled()) { // 서비스 이용 정지된 회원
-    throw new DisabledException(username);
-  }
-		
-  UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
-  token.setDetails(userDetails);
-		
-  return token;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationProvider.java">CustomAuthenticationProvider.java</a>
 </pre>
 ## CustomAuthenticationSuccessHandler
-<pre>
-@Inject
-private SqlSession sqlSession;
-	
-private RequestCache requestCache = new HttpSessionRequestCache();
-private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-	
-@Override
-public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
-  throws IOException, ServletException {
-	 	
-  CustomUserDetails userDetails = (CustomUserDetails)auth.getDetails();
-		
-  LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-  Map<String, String> map = new HashMap<>();
-  map.put("user_id", String.valueOf(userDetails.getId()));
-  map.put("ip", request.getRemoteAddr());
-  dao.insertUserLog(map); // 마지막 로그인 일시 기록
-		
-  request.getSession().setAttribute("id", userDetails.getId());
-  request.getSession().setAttribute("nickname", userDetails.getNickname());
-  request.getSession().setAttribute("level", userDetails.getLevel());
-  request.getSession().setAttribute("profile", userDetails.getProfile());
-  request.getSession().setAttribute("userType", userDetails.getType());
-		
-  SavedRequest saveRequest = requestCache.getRequest(request, response);
-		
-  if(saveRequest != null) {
-    redirectStrategy.sendRedirect(request, response, saveRequest.getRedirectUrl());
-  } else {
-    redirectStrategy.sendRedirect(request, response, "/");
+```java
+public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+  @Inject
+  private SqlSession sqlSession;
+
+  private RequestCache requestCache = new HttpSessionRequestCache();
+  private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+
+  @Override
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
+    throws IOException, ServletException {
+
+    CustomUserDetails userDetails = (CustomUserDetails)auth.getDetails();
+
+    LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
+    Map<String, String> map = new HashMap<>();
+    map.put("user_id", String.valueOf(userDetails.getId()));
+    map.put("ip", request.getRemoteAddr());
+    dao.insertUserLog(map); // 마지막 로그인 일시 기록
+
+    request.getSession().setAttribute("id", userDetails.getId());
+    request.getSession().setAttribute("nickname", userDetails.getNickname());
+    request.getSession().setAttribute("level", userDetails.getLevel());
+    request.getSession().setAttribute("profile", userDetails.getProfile());
+    request.getSession().setAttribute("userType", userDetails.getType());
+
+    SavedRequest saveRequest = requestCache.getRequest(request, response);
+
+    if(saveRequest != null) {
+      redirectStrategy.sendRedirect(request, response, saveRequest.getRedirectUrl());
+    } else {
+      redirectStrategy.sendRedirect(request, response, "/");
+    }
+
   }
-		
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationSuccessHandler.java">CustomAuthenticationSuccessHandler.java</a>
 </pre>
 ## CustomAuthenticationFailureHandler
-<pre>
-@Inject
-private SqlSession sqlSession;
-	
-@Override
- public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-  throws IOException, ServletException {
+```java
+public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-	String errorMsg = "";
+  @Inject
+  private SqlSession sqlSession;
 
-  if(exception instanceof InternalAuthenticationServiceException || exception instanceof BadCredentialsException) {
-    errorMsg = "아이디 또는 비밀번호를 확인해주세요.";
-  } else if(exception instanceof LockedException) {
-    errorMsg = "진행 중인 탈퇴가 취소되었습니다.<br>다시 로그인해주세요.";
-  } else if(exception instanceof DisabledException) {
-    LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
-    String username = request.getParameter("username");
-    Map<String, String> resultMap = dao.selectUserBanInfoByUsername(username);
-    errorMsg = "정지된 계정입니다.<br><br>"
-        + "사유 : " + resultMap.get("reason") + "<br>"
-        + "정지일 : " + resultMap.get("register_date") + " 00:00" + "<br>"
-        + "해제일 : " + resultMap.get("period_date") + " 00:00";
+  @Override
+   public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+    throws IOException, ServletException {
+
+    String errorMsg = "";
+
+    if(exception instanceof InternalAuthenticationServiceException || exception instanceof BadCredentialsException) {
+      errorMsg = "아이디 또는 비밀번호를 확인해주세요.";
+    } else if(exception instanceof LockedException) {
+      errorMsg = "진행 중인 탈퇴가 취소되었습니다.<br>다시 로그인해주세요.";
+    } else if(exception instanceof DisabledException) {
+      LoginDAO dao = sqlSession.getMapper(LoginDAO.class);
+      String username = request.getParameter("username");
+      Map<String, String> resultMap = dao.selectUserBanInfoByUsername(username);
+      errorMsg = "정지된 계정입니다.<br><br>"
+          + "사유 : " + resultMap.get("reason") + "<br>"
+          + "정지일 : " + resultMap.get("register_date") + " 00:00" + "<br>"
+          + "해제일 : " + resultMap.get("period_date") + " 00:00";
+    }
+
+    request.setAttribute("errorMsg", errorMsg);
+    request.getRequestDispatcher("/login").forward(request, response);
+
   }
-		
-  request.setAttribute("errorMsg", errorMsg);
-  request.getRequestDispatcher("/login").forward(request, response);
-
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/security/CustomAuthenticationFailureHandler.java">CustomAuthenticationFailureHandler.java</a>
 </pre>
 ## LoginMapper
-<pre>
-&lt;mapper namespace="com.kjh.aps.persistent.LoginDAO"&gt;
-  &lt;select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails"&gt;
+```xml
+<mapper namespace="com.kjh.aps.persistent.LoginDAO">
+  <select id="selectUserByUsername" resultType="com.kjh.aps.security.CustomUserDetails">
     SELECT id, username, password, nickname, profile, level, type, auth, enabled, status FROM user WHERE username = #{param1}
-  &lt;/select&gt;
-  &lt;select id="selectUserInfoByMap" resultType="Map"&gt;
-    SELECT username, cast(type as char(1)) type FROM user WHERE name = #{name} AND email = #{email}
-  &lt;/select&gt;
-  &lt;select id="selectUserTypeByMap" resultType="Integer"&gt;
+  </select>
+  <select id="selectUserTypeByMap" resultType="Integer">
     SELECT type FROM user WHERE name = #{name} AND username = #{username} AND email = #{email}
-  &lt;/select&gt;
-  &lt;update id="updateUserStatus"&gt;
-    &lt;choose&gt;
-      &lt;when test='type != null and type.equals("unlock")'&gt;
+  </select>
+  <update id="updateUserStatus">
+    <choose>
+      <when test='type != null and type.equals("unlock")'>
         UPDATE user SET enabled = 1, status = 1 WHERE id = #{id}
-      &lt;/when&gt;
-    &lt;/choose&gt;
-  &lt;/update&gt;
-  &lt;insert id="insertUserLog"&gt;
+      </when>
+    </choose>
+  </update>
+  <insert id="insertUserLog">
     INSERT INTO user_log(user_id, ip, login_date) VALUES(#{user_id}, #{ip}, CURRENT_TIMESTAMP)
-  &lt;/insert&gt;
-  &lt;select id="selectUserBanInfoByUsername" resultType="Map"&gt;
+  </insert>
+  <select id="selectUserBanInfoByUsername" resultType="Map">
     SELECT
       reason, DATE_FORMAT(period_date, '%Y-%m-%d') period_date,
       DATE_FORMAT(register_date, '%Y-%m-%d') register_date
@@ -618,12 +629,12 @@ private SqlSession sqlSession;
       user_ban
     WHERE
       user_id = (SELECT id FROM user WHERE username = #{param1})
-  &lt;/select&gt;
-  &lt;update id="updateSocialUserPassword"&gt;
+  </select>
+  <update id="updateSocialUserPassword">
     UPDATE user SET password = #{password} WHERE id = #{id}
-  &lt;/update&gt;
-&lt;/mapper&gt;
-</pre>
+  </update>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/LoginDAO.xml">LoginDAO.xml</a>
 </pre>
