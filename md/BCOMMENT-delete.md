@@ -1,5 +1,5 @@
 ## Demo
-<img src="https://user-images.githubusercontent.com/47962660/64956161-e9403680-d8c4-11e9-9d35-6d11d814de72.gif"/>
+<img src="https://user-images.githubusercontent.com/47962660/64964007-2c0a0a80-d8d5-11e9-923b-c80e84864077.gif"/>
 
 ## BoardView(Client)
 ```javascript
@@ -121,4 +121,43 @@ public String deleteBoardWriteComment(Map<String, Integer> map) throws Exception
 ```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
+</pre>
+## CommonServiceImpl
+```java
+@Inject
+private CommonDAO dao;
+private final int EXPIRE_DELETE_DAY = 30;
+  
+@Override
+@Transactional(isolation=Isolation.READ_COMMITTED)
+@Scheduled(cron="0 0 0 * * *")
+public void deleteExpireBroadcasterComment() throws Exception { // 방송인 커뮤니티 게시판 글의 삭제 요청 댓글 및 답글 30일 보관 기한 만료 시 영구삭제
+  dao.deleteExpireBoardWriteCommentIndivReply(EXPIRE_DELETE_DAY);
+  dao.deleteExpireBoardWriteCommentReplyIndiv(EXPIRE_DELETE_DAY);
+  dao.deleteExpireBoardWriteCommentIndivRecommendHistory(EXPIRE_DELETE_DAY);
+  dao.deleteExpireBoardWriteCommentIndiv(EXPIRE_DELETE_DAY);
+}
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommonServiceImpl.java">CommonServiceImpl.java</a>
+</pre>
+## CommonMapper
+```xml
+<mapper namespace="common">
+  <delete id="deleteExpireBoardWriteCommentIndivReply">
+    DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBoardWriteCommentReplyIndiv">
+    DELETE FROM broadcaster_board_comment_reply WHERE id IN (SELECT bc_r.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment_reply WHERE status = 0) bc_r WHERE bc_r.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBoardWriteCommentIndivRecommendHistory">	
+    DELETE FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBoardWriteCommentIndiv">
+    DELETE FROM broadcaster_board_comment WHERE id IN (SELECT bc.id FROM (SELECT id, delete_date, datediff(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board_comment WHERE status = 0) bc WHERE bc.datediff >= #{param1})	
+  </delete>
+</mapper>
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommonDAO.xml">CommonDAO.xml</a>
 </pre>
