@@ -21,6 +21,286 @@
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml">ServletContext.xml</a>
 </pre>
+## Client
+```javascript
+function selectPushList() {
+  var header = "${_csrf.headerName}";
+  var token = "${_csrf.token}";
+  $("#empty-push-list").css("display", "none");
+  $("#error-push-list").css("display", "none");
+  $("#mobile-empty-push-list").css("display", "none");
+  $("#mobile-error-push-list").css("display", "none");
+  $("#pl-default").html("");
+  $("#mobile-pl-default").html("");
+  $("#push-list").append("<li id='progress-push-list' class='progress-push-list'><div class='spinner-border spinner-aps'></div></li>");
+  $("#mobile-push-list").append("<li id='mobile-progress-push-list' class='progress-push-list'><div class='spinner-border spinner-aps'></div></li>");
+  $.ajax({
+    url: "${pageContext.request.contextPath}/common/push",
+    type: "POST",
+    cache: false,
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader(header, token);
+    },
+    complete: function() {
+      $("#progress-push-list").remove();
+      $("#mobile-progress-push-list").remove();
+    },
+    success: function(data, status) {
+      if(status == "success") {
+        if(data.status == "Success") {
+          pushCount = 0;
+          pushReadCount = 0;
+          if(data.count != 0) {
+            var tempHTML = "";
+            setTimeout(function() { $("#push-bell").removeClass("animated swing"); $("#mobile-push-bell").removeClass("animated swing"); }, 2000);
+            for(var i=0; i<data.count; i++) {
+              if(data.userPushs[i].status == 1) {
+                pushCount += 1;
+              } else {
+                pushReadCount += 1;
+              }
+              tempHTML += "<div class='pl-default-box " + (data.userPushs[i].status==1? "":"read") + "'>";
+                tempHTML += "<div class='read-circle'></div>";
+                tempHTML += "<div class='content'>";
+                  tempHTML += "<p class='subject' onclick=movePushPage('" + data.userPushs[i].id + "','" + data.userPushs[i].broadcaster_id + "','" + data.userPushs[i].content_id + "','" + data.userPushs[i].type + "');>" + pushSubjectFormat(data.userPushs[i].broadcaster_nickname,data.userPushs[i].subject,data.userPushs[i].type) + "</p>";
+                  tempHTML += "<p class='info'>";
+                    tempHTML += "<span>" + pushTypeFormat(data.userPushs[i].type) + "</span><span>" + (data.userPushs[i].nickname==null? data.userPushs[i].nonuser_nickname:data.userPushs[i].nickname) + "</span><span class='push-date'>" + pushDateFormat(data.userPushs[i].register_date) + "</span>";
+                  tempHTML += "</p>"
+                tempHTML += "</div>";
+                tempHTML += "<div class='button'>";
+                  tempHTML += "<button class='remove-button' onclick=deletePush('" + data.userPushs[i].id + "','one');>삭제</button>";
+                tempHTML += "</div>";
+              tempHTML += "</div>";
+            }
+            $("#pl-default").html(tempHTML);
+            $("#mobile-pl-default").html(tempHTML);
+          } else {
+            $("#empty-push-list").css("display", "block");
+            $("#mobile-empty-push-list").css("display", "block");
+          }
+          $("#push-count").html(pushCount>99? "99+":pushCount);
+          $("#mobile-push-count").html(pushCount>99? "99+":pushCount);
+        } else {
+          $("#empty-push-list").css("display", "block");
+          $("#mobile-empty-push-list").css("display", "block");
+        }
+        if(pushCount > 0) {
+          $("#push-bell").addClass("animated swing");
+          $("#push-bell").addClass("on");
+          $("#mobile-push-bell").addClass("animated swing");
+          $("#mobile-push-bell").addClass("on");
+          $(".push-count").addClass("on");
+        } else {
+          $("#push-bell").removeClass("on");
+          $("#mobile-push-bell").removeClass("on");
+          $(".push-count").removeClass("on");
+        }
+      }
+    },
+    error: function() {
+      $("#empty-push-list").css("display", "block");
+      $("#mobile-empty-push-list").css("display", "block");
+      location.reload();
+    }
+  });
+}
+function selectPushListPolling() {
+  var header = "${_csrf.headerName}";
+  var token = "${_csrf.token}";
+  $("#empty-push-list").css("display", "none");
+  $("#error-push-list").css("display", "none");
+  $("#mobile-empty-push-list").css("display", "none");
+  $("#mobile-error-push-list").css("display", "none");
+  $("#pl-default").html("");
+  $("#mobile-pl-default").html("");
+  $("#push-list").append("<li id='progress-push-list' class='progress-push-list'><div class='spinner-border spinner-aps'></div></li>");
+  $("#mobile-push-list").append("<li id='mobile-progress-push-list' class='progress-push-list'><div class='spinner-border spinner-aps'></div></li>");
+  setTimeout(function() {
+    $.ajax({
+      url: "${pageContext.request.contextPath}/common/push",
+      type: "POST",
+      cache: false,
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(header, token);
+      },
+      complete: function() {
+        $("#progress-push-list").remove();
+        $("#mobile-progress-push-list").remove();
+      },
+      success: function(data, status) {
+        if(status == "success") {
+          if(data.status == "Success") {
+            pushCount = 0;
+            pushReadCount = 0;
+            if(data.count != 0) {
+              var tempHTML = "";
+              setTimeout(function() { $("#push-bell").removeClass("animated swing"); $("#mobile-push-bell").removeClass("animated swing"); }, 2000);
+              for(var i=0; i<data.count; i++) {
+                if(data.userPushs[i].status == 1) {
+                  pushCount += 1;
+                } else {
+                  pushReadCount += 1;
+                }
+                tempHTML += "<div class='pl-default-box " + (data.userPushs[i].status==1? "":"read") + "'>";
+                  tempHTML += "<div class='read-circle'></div>";
+                  tempHTML += "<div class='content'>";
+                    tempHTML += "<p class='subject' onclick=movePushPage('" + data.userPushs[i].id + "','" + data.userPushs[i].broadcaster_id + "','" + data.userPushs[i].content_id + "','" + data.userPushs[i].type + "');>" + pushSubjectFormat(data.userPushs[i].broadcaster_nickname,data.userPushs[i].subject,data.userPushs[i].type) + "</p>";
+                    tempHTML += "<p class='info'>";
+                      tempHTML += "<span>" + pushTypeFormat(data.userPushs[i].type) + "</span><span>" + (data.userPushs[i].nickname==null? data.userPushs[i].nonuser_nickname:data.userPushs[i].nickname) + "</span><span>" + pushDateFormat(data.userPushs[i].register_date) + "</span>";
+                    tempHTML += "</p>"
+                  tempHTML += "</div>";
+                  tempHTML += "<div class='button'>";
+                    tempHTML += "<button class='remove-button' onclick=deletePush('" + data.userPushs[i].id + "','one');>삭제</button>";
+                  tempHTML += "</div>";
+                tempHTML += "</div>";
+              }
+              $("#pl-default").html(tempHTML);
+              $("#mobile-pl-default").html(tempHTML);
+            } else {
+              $("#empty-push-list").css("display", "block");
+              $("#mobile-empty-push-list").css("display", "block");
+            }
+            $("#push-count").html(pushCount>99? "99+":pushCount);
+            $("#mobile-push-count").html(pushCount>99? "99+":pushCount);
+          }
+          if(pushCount > 0) {
+            $("#push-bell").addClass("animated swing");
+            $("#push-bell").addClass("on");
+            $("#mobile-push-bell").addClass("animated swing");
+            $("#mobile-push-bell").addClass("on");
+            $(".push-count").addClass("on");
+          } else {
+            $("#push-bell").removeClass("on");
+            $("#mobile-push-bell").removeClass("on");
+            $(".push-count").removeClass("on")
+          }
+        }
+      },
+      error: function() {
+        $("#error-push-list").css("display", "block");
+        $("#mobile-error-push-list").css("display", "block");
+        location.reload();
+      }
+    });
+  }, 2000);
+}
+function pushSubjectFormat(nickname, subject, type) {
+  if(type == 3) {
+    return "민심평가(" + nickname + ")";
+  } else {
+    return subject;
+  }
+}
+function pushTypeFormat(type) {
+  if(type == 1 || type == 4 || type == 6) {
+    return "댓글";
+  } else if(type == 2 || type == 3 || type == 5 || type == 7) {
+    return "답글";
+  }
+}
+function movePushPage(id, broadcasterId, boardId, type) {
+  var header = "${_csrf.headerName}";
+  var token = "${_csrf.token}";
+  $.ajax({
+    url: "${pageContext.request.contextPath}/common/push/read",
+    type: "POST",
+    cache: false,
+    data: {
+      "id" : id
+    },
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader(header, token)
+    },
+    success: function(data, status) {
+      if(status == "success") {
+        if(data == "Success") {
+          if(type == 1 || type == 2) { // 게시판 댓글, 답글
+            location.href = "${pageContext.request.contextPath}/community/board/view/" + boardId + "?broadcasterId=" + broadcasterId;
+          } else if(type == 3) { // 민심평가 답글
+            location.href = "${pageContext.request.contextPath}/community/review/" + broadcasterId;
+          } else if(type == 4 || type == 5) { // 고객센터 댓글, 답글
+            location.href = "${pageContext.request.contextPath}/customerService/" + broadcasterId;
+          } else if(type == 6 || type == 7) { // 통합 게시판 댓글 ,답글
+            location.href = "${pageContext.request.contextPath}/community/combine/view/" + boardId;
+          }
+        }
+      }
+    }
+  });
+}
+function deletePush(id, deleteType) {
+  var header = "${_csrf.headerName}";
+  var token = "${_csrf.token}";
+  if(deleteType == "one") {
+    $.ajax({
+      url: "${pageContext.request.contextPath}/common/push/delete",
+      type: "POST",
+      cache: false,
+      data: {
+        "id" : id,
+        "deleteType" : deleteType
+      },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(header, token);
+      },
+      success: function(data, status) {
+        if(status == "success") {
+          if(data == "Success") {
+            selectPushList();
+          }
+        }
+      }
+    });
+  } else if(deleteType == "readOnly") {
+    if(pushReadCount != 0) {
+      $.ajax({
+        url: "${pageContext.request.contextPath}/common/push/delete",
+        type: "POST",
+        cache: false,
+        data: {
+          "id" : id,
+          "deleteType" : deleteType
+        },
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(header, token);
+        },
+        success: function(data, status) {
+          if(status == "success") {
+            if(data == "Success") {
+              selectPushList();
+            }
+          }
+				}
+      });
+    }
+  } else {
+    if(pushCount != 0) {
+      $.ajax({
+        url: "${pageContext.request.contextPath}/common/push/delete",
+        type: "POST",
+        cache: false,
+        data: {
+          "id" : id,
+          "deleteType" : deleteType
+        },
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(header, token);
+        },
+        success: function(data, status) {
+          if(status == "success") {
+            if(data == "Success") {
+              selectPushList();
+            }
+          }
+        }
+      });
+    }
+  }
+}
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/resources/include/header.jsp">header.jsp</a>
+</pre>
 ## PushInterceptor
 ```java
 public class PushInterceptor extends HandlerInterceptorAdapter {
@@ -52,11 +332,11 @@ public class PushInterceptor extends HandlerInterceptorAdapter {
         Integer user_id = 0;
 				
         dto = new UserPushDTO(commentReply.getBroadcaster_id(), user_id, from_user_id, commentReply.getBroadcaster_review_id(), "NONE", type);
-			} else if(type == 4) { // 고객센터 댓글 Push
-				CommentDTO comment = (CommentDTO)request.getAttribute("dto");
-				Integer user_id = comment.getBoardUserId(); // Push를 수신할 회원 고유번호
+      } else if(type == 4) { // 고객센터 댓글 Push
+        CommentDTO comment = (CommentDTO)request.getAttribute("dto");
+        Integer user_id = comment.getBoardUserId(); // Push를 수신할 회원 고유번호
 				
-				dto = new UserPushDTO(comment.getCategory_id(), user_id, from_user_id, comment.getNotice_id(), comment.getBoardSubject(), type);
+        dto = new UserPushDTO(comment.getCategory_id(), user_id, from_user_id, comment.getNotice_id(), comment.getBoardSubject(), type);
       } else if(type == 5) { // 고객센터 댓글의 답글 Push
         CommentReplyDTO commentReply = (CommentReplyDTO)request.getAttribute("dto");
         Integer user_id = commentReply.getNotice_comment_id(); // Push를 수신할 회원의 해당 댓글의 고유번호
@@ -92,6 +372,8 @@ public class PushInterceptor extends HandlerInterceptorAdapter {
 @Inject
 private CommonDAO dao;
 
+private final int EXPIRE_DELETE_DAY_TYPE_PUSH = 7;
+
 @Override
 public int insertUserPush(UserPushDTO dto) throws Exception { // 알림 추가
   Integer user_id = dao.selectUserIdByUserPushDTO(dto);
@@ -101,6 +383,40 @@ public int insertUserPush(UserPushDTO dto) throws Exception { // 알림 추가
   } else {
     return 0;
   }
+}
+
+@Override
+@Transactional(readOnly = true)
+public UserPushsDTO selectUserPushListByUserId(int userId) throws Exception { // 회원 알림 불러오기
+		
+  UserPushsDTO userPushs = new UserPushsDTO();
+		
+  userPushs.setUserPushs(dao.selectUserPushListByUserId(userId));
+		
+  if(userPushs.getUserPushs() != null && userPushs.getUserPushs().size() != 0) {
+    userPushs.setCount(userPushs.getUserPushs().size());
+  }
+		
+  userPushs.setStatus("Success");
+		
+  return userPushs;
+}
+
+@Override
+public int updateUserPushStatus(Map<String, Integer> map) throws Exception { // 알림 읽음 상태 수정
+  return dao.updateUserPushStatus(map);
+}
+
+@Override
+public int deleteUserPush(Map<String, String> map) throws Exception { // 알림 삭제
+  return dao.deleteUserPush(map);
+}
+
+@Override
+@Transactional(isolation=Isolation.READ_COMMITTED)
+@Scheduled(cron="0 0 0 * * *")
+public void deleteExpireUserPushIndiv() throws Exception { // 보관 기한이 만료된 회원 알림들 영구삭제
+  dao.deleteExpireUserPushIndiv(EXPIRE_DELETE_DAY_TYPE_PUSH);
 }
 ```
 <pre>
@@ -159,6 +475,31 @@ public int insertUserPush(UserPushDTO dto) throws Exception { // 알림 추가
       </when>
     </choose>
   </insert>
+  <select id="selectUserPushListByUserId" resultType="com.kjh.aps.domain.UserPushDTO">
+    SELECT
+      p.*,
+      (SELECT nickname FROM user WHERE id = p.from_user_id) nickname,
+      (SELECT nickname FROM broadcaster WHERE id = p.broadcaster_id) broadcaster_nickname
+    FROM
+      (SELECT * FROM user_push WHERE user_id = #{param1}) p ORDER BY id DESC
+  </select>
+  <update id="updateUserPushStatus">
+    UPDATE user_push SET status = 0 WHERE id = #{id} AND user_id = #{user_id} AND status = 1
+  </update>
+  <delete id="deleteUserPush">
+    <if test='deleteType != null and deleteType.equals("one")'>
+      DELETE FROM user_push WHERE id = #{id} AND user_id = #{user_id}
+    </if>
+    <if test='deleteType != null and deleteType.equals("readOnly")'>
+      DELETE FROM user_push WHERE user_id = #{user_id} AND status = 0
+    </if>
+    <if test='deleteType != null and deleteType.equals("all")'>
+      DELETE FROM user_push WHERE user_id = #{user_id}
+    </if>
+  </delete>
+  <delete id="deleteExpireUserPushIndiv">
+    DELETE FROM user_push WHERE id IN (SELECT u.id FROM (SELECT id, datediff(CURRENT_TIMESTAMP, register_date) datediff FROM user_push) u WHERE u.datediff >= #{param1})
+  </delete>
 </mapper>
 ```
 <pre>
