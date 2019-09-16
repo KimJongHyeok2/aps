@@ -252,7 +252,6 @@ function writeReview() {
 		}
 	}
 }
-//댓글 수정
 function modifyReview(id) {
 	var pop = window.open("${pageContext.request.contextPath}/community/review/modify/" + id + "?broadcasterId=${broadcaster.id}", "pop", "width=500, height=712, scrollbars=yes, resizable=yes");
 }
