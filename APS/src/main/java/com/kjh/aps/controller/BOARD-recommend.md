@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64945677-0ae0f400-d8ac-11e9-975d-a4f9f8bd6468.gif"/>
 
 ## BoardView(Client)
-<pre>
+```javascript
 // 게시글 추천/비추천
 function recommend(type) {
   var id = "${board.id}";
@@ -58,12 +58,12 @@ function recommend(type) {
     });
   }
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/community/board/board_view.jsp">board_view.jsp</a>
 </pre>
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 
@@ -104,12 +104,12 @@ public @ResponseBody String boardRecommend(@RequestParam(value = "id", defaultVa
 		
   return resultMsg;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityControler.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
   
@@ -141,34 +141,34 @@ public String updateBoardWriteRecommend(Map<String, String> map) throws Exceptio
 		
   return result;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;select id="selectBoardWriteRecommendHistoryTypeByMap" resultType="Integer"&gt;
+```xml
+<mapper namespace="community">
+  <select id="selectBoardWriteRecommendHistoryTypeByMap" resultType="Integer">
     SELECT b.type FROM (SELECT * FROM broadcaster_board_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_board_id = #{id} AND (b.user_id = #{user_id} OR b.ip = #{ip})
-  &lt;/select&gt;
-  &lt;update id="updateBoardWriteRecommend"&gt;
-    &lt;if test='type.equals("up")'&gt;
+  </select>
+  <update id="updateBoardWriteRecommend">
+    <if test='type.equals("up")'>
       UPDATE broadcaster_board SET up = up + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
-    &lt;/if&gt;
-    &lt;if test='type.equals("down")'&gt;
+    </if>
+    <if test='type.equals("down")'>
       UPDATE broadcaster_board SET down = down + 1 WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND status = 1
-    &lt;/if&gt;
-  &lt;/update&gt;
-  &lt;insert id="insertBoardWriteRecommendHistory"&gt;
-    &lt;if test='type.equals("up")'&gt;
+    </if>
+  </update>
+  <insert id="insertBoardWriteRecommendHistory">
+    <if test='type.equals("up")'>
       INSERT INTO broadcaster_board_recommend_history(broadcaster_id, broadcaster_board_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 1)
-    &lt;/if&gt;
-    &lt;if test='type.equals("down")'&gt;
+    </if>
+    <if test='type.equals("down")'>
       INSERT INTO broadcaster_board_recommend_history(broadcaster_id, broadcaster_board_id, user_id, ip, type) VALUES(#{broadcaster_id}, #{id}, #{user_id}, #{ip}, 2)
-    &lt;/if&gt;
-  &lt;/insert&gt;
-&lt;/mapper&gt;
-</pre>
+    </if>
+  </insert>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
