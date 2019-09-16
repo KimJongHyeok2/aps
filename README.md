@@ -91,7 +91,7 @@
           <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEWREPLY-delete.md">삭제</a></li>
         </ul>
       </li>
-      <li><a href="https://github.com/KimJongHyeok2/aps/tree/master/md">실시간 평점 평균</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-live.md">실시간 평점 평균</a></li>
     </ul>
   </li>
   <li>
