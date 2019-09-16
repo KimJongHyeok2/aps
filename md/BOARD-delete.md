@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64927760-3b904180-d84a-11e9-8e55-5e90cb5d1917.gif"/>
 
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 
@@ -31,12 +31,12 @@ public String boardDeleteOk(int id, String broadcasterId,
 
   return "redirect:/community/board/view/" + id + "?broadcasterId=" + broadcasterId + "&page=" + page + "";
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
   
@@ -62,23 +62,23 @@ public String deleteBoardWrite(Map<String, String> map) throws Exception { // �
 		
   return result; 
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;select id="selectBoardWriteUserIdByMap" resultType="Integer"&gt;
+```xml
+<mapper namespace="community">
+  <select id="selectBoardWriteUserIdByMap" resultType="Integer">
     SELECT b.user_id FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.id = #{id} AND status = 1
-  &lt;/select&gt;
-  &lt;update id="deleteBoardWrite"&gt;
+  </select>
+  <update id="deleteBoardWrite">
     UPDATE broadcaster_board SET status = 0, delete_date = CURRENT_TIMESTAMP WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND user_id = #{user_id}
-  &lt;/update&gt;
-&lt;/mapper&gt;
-</pre>
+  </update>
+</mapper>
+```
 ## CommonServiceImpl
-<pre>
+```java
 @Inject
 private CommonDAO dao;
 
@@ -97,27 +97,27 @@ public void deleteExpireBroadcasterBoardWrite() throws Exception { // 방송인 
 </pre>
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommonServiceImpl.java">CommonServiceImpl.java</a>
-</pre>
+```
 ## CommonMapper
-<pre>
-&lt;mapper namespace="common"&gt;
-  &lt;delete id="deleteExpireBoardWriteCommentReply"&gt;
-    DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff &gt;= #{param1}))
-  &lt;/delete&gt;
-  &lt;delete id="deleteExpireBoardWriteCommentRecommendHistory"&gt;
-    DELETE FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff &gt;= #{param1}))
-  &lt;/delete&gt;
-  &lt;delete id="deleteExpireBoardWriteComment"&gt;
-    DELETE FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff &gt;= #{param1})
-  &lt;/delete&gt;
-  &lt;delete id="deleteExpireBoardWriteRecommendHistory"&gt;
-    DELETE FROM broadcaster_board_recommend_history WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff &gt;= #{param1})
-  &lt;/delete&gt;
-  &lt;delete id="deleteExpireBoardWrite"&gt;
-    DELETE FROM broadcaster_board WHERE id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff &gt;= #{param1})
-  &lt;/delete&gt;
-&lt;/mapper&gt;
-</pre>
+```xml
+<mapper namespace="common">
+  <delete id="deleteExpireBoardWriteCommentReply">
+    DELETE FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+  </delete>
+  <delete id="deleteExpireBoardWriteCommentRecommendHistory">
+    DELETE FROM broadcaster_board_comment_recommend_history WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1}))
+  </delete>
+  <delete id="deleteExpireBoardWriteComment">
+    DELETE FROM broadcaster_board_comment WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBoardWriteRecommendHistory">
+    DELETE FROM broadcaster_board_recommend_history WHERE broadcaster_board_id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+  </delete>
+  <delete id="deleteExpireBoardWrite">
+    DELETE FROM broadcaster_board WHERE id IN (SELECT b.id FROM (SELECT id, delete_date, DATEDIFF(CURRENT_TIMESTAMP, delete_date) datediff FROM broadcaster_board WHERE status = 0) b WHERE b.datediff >= #{param1})
+  </delete>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommonDAO.xml">CommonDAO.xml</a>
 </pre>
