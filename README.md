@@ -22,14 +22,20 @@
 <span>Google Login</span>
 <span>Amazon S3</span>
 <span>WebSocket</span>
+<span><a href="https://github.com/naver/lucy-xss-filter">Luxy-Xss-Fillter</a></span>
 </pre>
 ## 주요기능
 <ul>
   <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/LOGIN.md">로그인</a></li>
   <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/SOCIAL-login.md">소셜 로그인</a></li>
-  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/PROFILE.md">프로필 수정</a></li>
   <li>
-    BJ 게시판
+    마이페이지
+    <ul>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/PROFILE.md">프로필 수정</a></li>
+    </ul>
+  </li>
+  <li>
+    BJ별 게시판
     <ul>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-write.md">등록</a></li>
       <li>
@@ -70,6 +76,25 @@
     민심평가
     <ul>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-write.md">등록</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-list.md">목록</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-update.md">수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-delete.md">삭제</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-recommend.md">추천/비추천</a></li>
+      <li>
+        답글
+        <ul>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEWREPLY-write.md">등록</a></li>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEWREPLY-list.md">목록</a></li>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEWREPLY-delete.md">삭제</a></li>
+        </ul>
+      </li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/tree/master/md">실시간 평점 평균</a></li>
+    </ul>
+  </li>
+  <li>
+    기타
+    <ul>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-live.md">실시간 게시판 이용자 및 게시글 등록 알림</a></li>
     </ul>
   </li>
 </ul>
