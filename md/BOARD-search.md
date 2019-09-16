@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64928394-b3fb0080-d852-11e9-8d29-b9bc678ac872.gif"/>
 
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 private final int BOARD_PAGEBLOCK = 5;
@@ -55,12 +55,12 @@ public String board(String id, String searchValue,
 		
   return "community/board/board_list";
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
 	
@@ -120,21 +120,21 @@ private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
   return maps;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
-		SELECT * FROM broadcaster WHERE id = #{param1}
-  &lt;/select&gt;
-  &lt;select id="selectSearchBoardListByMap" resultType="com.kjh.aps.domain.BoardDTO"&gt;
-    &lt;choose&gt;
-      &lt;when test="searchType == 1"&gt;
-        &lt;choose&gt;
-          &lt;when test='listType != null and listType.equals("today")'&gt;
+```xml
+<mapper namespace="community">
+  <select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO">
+    SELECT * FROM broadcaster WHERE id = #{param1}
+  </select>
+  <select id="selectSearchBoardListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+    <choose>
+      <when test="searchType == 1">
+        <choose>
+          <when test='listType != null and listType.equals("today")'>
             SELECT brc_b_list.* FROM
               (SELECT
                 @rownum:=@rownum+1 as no, brc_b.*
@@ -146,11 +146,27 @@ private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                   broadcaster_board b INNER JOIN user u ON b.user_id = u.id
                 WHERE
                   (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
-                  AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
+								ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+            WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+          </when>
+          <when test='listType != null and listType.equals("week")'>
+            SELECT brc_b_list.* FROM
+              (SELECT
+                @rownum:=@rownum+1 as no, brc_b.*
+              FROM
+                (SELECT
+                  b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+                  ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+                FROM
+                  broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+                WHERE
+                  (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}))
                 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
             WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-          &lt;/when&gt;
-          &lt;when test='listType != null and listType.equals("week")'&gt;
+          </when>
+          <when test='listType != null and listType.equals("month")'>
             SELECT brc_b_list.* FROM
               (SELECT
                 @rownum:=@rownum+1 as no, brc_b.*
@@ -162,11 +178,11 @@ private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                   broadcaster_board b INNER JOIN user u ON b.user_id = u.id
                 WHERE
                   (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
-                  AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((b.up - b.down) &lt;= #{order}))
+									AND ((DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}))
                 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
             WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-          &lt;/when&gt;
-          &lt;when test='listType != null and listType.equals("month")'&gt;
+					</when>
+          <otherwise>
             SELECT brc_b_list.* FROM
               (SELECT
                 @rownum:=@rownum+1 as no, brc_b.*
@@ -178,28 +194,12 @@ private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                   broadcaster_board b INNER JOIN user u ON b.user_id = u.id
                 WHERE
                   (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
-                  AND ((DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) &lt;= #{order}))
                 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
             WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-          &lt;/when&gt;
-          &lt;otherwise&gt;
-            SELECT brc_b_list.* FROM
-              (SELECT
-                @rownum:=@rownum+1 as no, brc_b.*
-              FROM
-                (SELECT
-                  b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
-                  ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-                FROM
-                  broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-                WHERE
-                  (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
-                ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-          	WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-          &lt;/otherwise&gt;
-        &lt;/choose&gt;
-      &lt;/when&gt;
-      &lt;otherwise&gt;
+        </otherwise>
+        </choose>
+      </when>
+      <otherwise>
         SELECT brc_b_list.* FROM
           (SELECT
             @rownum:=@rownum+1 as no, brc_b.*
@@ -213,37 +213,11 @@ private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
               (b.broadcaster_id = #{id} AND b.status = 1) AND (b.subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR b.subject like LOWER(CONCAT('%', #{searchValue}, '%')))
             ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
         WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-      &lt;/otherwise&gt;
-    &lt;/choose&gt;
-  &lt;/select&gt;
-  &lt;select id="selectSearchBoardCountByMap" resultType="Integer"&gt;
-    &lt;choose&gt;
-      &lt;when test="searchType == 1"&gt;
-        &lt;choose&gt;
-          &lt;when test='listType != null and listType.equals("today")'&gt;
-            SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
-            AND ((DATE_FORMAT(register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((up - down) &lt;= #{order}))
-          &lt;/when&gt;
-          &lt;when test='listType != null and listType.equals("week")'&gt;
-            SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
-            AND ((DATE_FORMAT(register_date, '%Y-%m-%d') BETWEEN DATE_FORMAT(#{startDay}, '%Y-%m-%d') AND DATE_FORMAT(#{endDay}, '%Y-%m-%d')) AND ((up - down) &lt;= #{order}))
-          &lt;/when&gt;
-          &lt;when test='listType != null and listType.equals("month")'&gt;
-            SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
-            AND ((DATE_FORMAT(register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((up - down) &lt;= #{order}))
-          &lt;/when&gt;
-          &lt;otherwise&gt;
-            SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
-          &lt;/otherwise&gt;
-        &lt;/choose&gt;
-      &lt;/when&gt;
-      &lt;otherwise&gt;
-        SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id}) AND (subject like UPPER(CONCAT('%', #{searchValue}, '%')) OR subject like LOWER(CONCAT('%', #{searchValue}, '%'))) AND status = 1
-      &lt;/otherwise&gt;
-    &lt;/choose&gt;
-  &lt;/select&gt;
-&lt;/mapper&gt;
-</pre>
+      </otherwise>
+    </choose>
+  </select>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
