@@ -22,7 +22,7 @@
 <span>Google Login</span>
 <span>Amazon S3</span>
 <span>WebSocket</span>
-<span><a href="https://github.com/naver/lucy-xss-filter">Luxy-Xss-Fillter</a></span>
+<span><a href="https://github.com/naver/lucy-xss-filter">Luxy-Xss-Filter</a></span>
 </pre>
 ## 주요기능
 <ul>
