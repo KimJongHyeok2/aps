@@ -25,22 +25,33 @@
 </pre>
 ## 주요기능
 <ul>
-  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/login.md">로그인</a></li>
-  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/sociallogin.md">소셜 로그인</a></li>
-  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/profile.md">프로필 수정</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/LOGIN.md">로그인</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/SOCIAL-login.md">소셜 로그인</a></li>
+  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/PROFILE.md">프로필 수정</a></li>
   <li>
     BJ 게시판
     <ul>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardWrite.md">등록</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-write.md">등록</a></li>
       <li>
-        <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardList.md">목록</a>
+        <a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-list.md">목록</a>
         <ul>
-          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardSearch.md">검색</a></li>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-search.md">검색</a></li>
         </ul>
       </li>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardUpdate.md">수정</a></li>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardDelete.md">삭제</a></li>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/boardView.md">상세보기</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-update.md">수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-delete.md">삭제</a></li>
+      <li>
+        <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/BOARD-view.md">상세보기</a>
+        <ul>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-recommend.md">추천/비추천</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    민심평가
+    <ul>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-write.md">등록</a></li>
     </ul>
   </li>
 </ul>
