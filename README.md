@@ -41,7 +41,7 @@
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-update.md">수정</a></li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-delete.md">삭제</a></li>
       <li>
-        <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/BOARD-view.md">상세보기</a>
+        <a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-view.md">상세보기</a>
         <ul>
           <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-recommend.md">추천/비추천</a></li>
         </ul>
