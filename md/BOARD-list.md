@@ -3,7 +3,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64927132-a6894a80-d841-11e9-8903-f4d083ca0861.gif"/>
 
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 private final int BOARD_PAGEBLOCK = 5;
@@ -54,12 +54,12 @@ public String board(String id, @RequestParam(value = "listType", defaultValue = 
 		
   return "community/board/board_list";
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
 	
@@ -119,19 +119,19 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
 		
   return maps;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
+```xml
+<mapper namespace="community">
+  <select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO">
     SELECT * FROM broadcaster WHERE id = #{param1}
-  &lt;/select&gt;
-  &lt;select id="selectBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO"&gt;
-    &lt;choose&gt;
-      &lt;when test='listType != null and listType.equals("today")'&gt;
+  </select>
+  <select id="selectBoardWriteListByMap" resultType="com.kjh.aps.domain.BoardDTO">
+    <choose>
+      <when test='listType != null and listType.equals("today")'>
         SELECT brc_b_list.* FROM
           (SELECT
             @rownum:=@rownum+1 as no, brc_b.*
@@ -142,10 +142,10 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
             FROM
               broadcaster_board b INNER JOIN user u ON b.user_id = u.id
             WHERE
-              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-         WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-      &lt;/when&gt;
-      &lt;when test='listType != null and listType.equals("week")'&gt;
+              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      </when>
+      <when test='listType != null and listType.equals("week")'>
         SELECT brc_b_list.* FROM
           (SELECT
             @rownum:=@rownum+1 as no, brc_b.*
@@ -156,10 +156,10 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
             FROM
               broadcaster_board b INNER JOIN user u ON b.user_id = u.id
             WHERE
-              (b.broadcaster_id = #{id} AND b.status = 1) AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-        WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-      &lt;/when&gt;
-      &lt;when test='listType != null and listType.equals("month")'&gt;
+              (b.broadcaster_id = #{id} AND b.status = 1) AND ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      </when>
+      <when test='listType != null and listType.equals("month")'>
         SELECT brc_b_list.* FROM
           (SELECT
             @rownum:=@rownum+1 as no, brc_b.*
@@ -170,27 +170,43 @@ public Map<String, Object> selectBoardWriteListByMap(Map<String, String> map) th
             FROM
               broadcaster_board b INNER JOIN user u ON b.user_id = u.id
             WHERE
-              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) &gt;= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
-        WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-      &lt;/when&gt;
-      &lt;otherwise&gt;
+              (b.broadcaster_id = #{id} AND b.status = 1) AND (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order}) ORDER BY (b.up - b.down) DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+				WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
+      </when>
+      <otherwise>
         SELECT brc_b_list.* FROM
           (SELECT
             @rownum:=@rownum+1 as no, brc_b.*
           FROM
-          (SELECT
-            b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
-            ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
-           FROM
-            broadcaster_board b INNER JOIN user u ON b.user_id = u.id
-           WHERE
-            b.broadcaster_id = #{id} AND b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
+            (SELECT
+              b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
+              ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = b.id) AND status = 1)) commentCount
+            FROM
+              broadcaster_board b INNER JOIN user u ON b.user_id = u.id
+            WHERE
+              b.broadcaster_id = #{id} AND b.status = 1 ORDER BY b.id DESC) brc_b, (SELECT @rownum:=0) rownum) brc_b_list
         WHERE brc_b_list.no BETWEEN #{page} + 1 AND #{page} + #{row}
-      &lt;/otherwise&gt;
-    &lt;/choose&gt;
-  &lt;/select&gt;
-&lt;/mapper&gt;
-</pre>
+    </otherwise>
+    </choose>
+  </select>
+  <select id="selectBoardWriteCountByMap" resultType="Integer">
+    <choose>
+      <when test='listType != null and listType.equals("today")'>
+        SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d')) AND ((b.up - b.down) >= #{order})
+      </when>
+      <when test='listType != null and listType.equals("week")'>
+        SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE ((DATE_FORMAT(b.register_date, '%Y-%m-%d')) BETWEEN (DATE_FORMAT(#{startDay}, '%Y-%m-%d')) AND (DATE_FORMAT(#{endDay}, '%Y-%m-%d'))) AND ((b.up - b.down) >= #{order})
+      </when>
+      <when test='listType != null and listType.equals("month")'>
+        SELECT count(b.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{id} AND status = 1) b WHERE (DATE_FORMAT(b.register_date, '%Y-%m') = DATE_FORMAT(#{month}, '%Y-%m')) AND ((b.up - b.down) >= #{order})
+      </when>
+      <otherwise>
+        SELECT count(id) FROM broadcaster_board WHERE (broadcaster_id = #{id} AND status = 1) 
+      </otherwise>
+    </choose>
+  </select>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
