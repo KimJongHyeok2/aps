@@ -31,7 +31,10 @@
   <li>
     마이페이지
     <ul>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/PROFILE.md">프로필 수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-push.md">내가 등록한 게시글 및 댓글 알림</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-profile.md">프로필 수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-level.md">회원 레벨 Up/Down</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/MYPAGE-leave.md">회원탈퇴</a></li>
     </ul>
   </li>
   <li>
@@ -94,7 +97,8 @@
   <li>
     기타
     <ul>
-      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-live.md">실시간 게시판 이용자 및 게시글 등록 알림</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-live.md">실시간 이용자 및 게시글 등록 게시판별 알림</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/WRITE-limit.md">게시글 및 댓글/답글 도배방지</a></li>
     </ul>
   </li>
 </ul>
