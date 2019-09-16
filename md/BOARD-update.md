@@ -2,7 +2,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64927298-ef420300-d843-11e9-8cd7-ea623c31434b.gif"/>
 
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
 private final int BOARD_PAGEBLOCK = 5;
@@ -96,12 +96,12 @@ public String boardModifyOk(BoardDTO dto, BindingResult result,
 		
   return "community/board/board_modify";
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
 
@@ -154,36 +154,36 @@ public Map<String, Object> updateBoardWrite(BoardDTO dto) throws Exception { // 
 		
   return map;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&ltmapper namespace="community"&gt;
-  &ltselect id="selectBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO"&gt;
-    &lt![CDATA[
+```xml
+<mapper namespace="community">
+  <select id="selectBoardWriteByMap" resultType="com.kjh.aps.domain.BoardDTO">
+    <![CDATA[
       SELECT
         brc_b.*, u.nickname as nickname, u.level as level, u.profile as profile, u.type as userType,
         (SELECT min(n.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) n WHERE n.id > #{id}) as next_id,
         (SELECT max(p.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) p WHERE p.id < #{id}) as prev_id,
-        (SELECT ns.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ns WHERE ns.id = (SELECT min(n.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) n WHERE n.id &gt; #{id})) as next_subject,
-        (SELECT ps.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ps WHERE ps.id = (SELECT max(p.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) p WHERE p.id &lt; #{id})) as prev_subject,
+        (SELECT ns.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ns WHERE ns.id = (SELECT min(n.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) n WHERE n.id > #{id})) as next_subject,
+        (SELECT ps.subject FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) ps WHERE ps.id = (SELECT max(p.id) FROM (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) p WHERE p.id < #{id})) as prev_subject,
         (SELECT b.type FROM (SELECT * FROM broadcaster_board_recommend_history WHERE broadcaster_id = #{broadcaster_id}) b WHERE b.broadcaster_board_id = #{id} AND (b.user_id = #{user_id} OR b.ip = #{ip})) type,
         ((SELECT count(id) FROM broadcaster_board_comment WHERE broadcaster_board_id = #{id} AND status = 1) + (SELECT count(id) FROM broadcaster_board_comment_reply WHERE broadcaster_board_comment_id IN (SELECT id FROM broadcaster_board_comment WHERE broadcaster_board_id = #{id}) AND status = 1)) commentCount
       FROM
         (SELECT * FROM broadcaster_board WHERE broadcaster_id = #{broadcaster_id} AND status = 1) brc_b INNER JOIN user u ON brc_b.user_id = u.id
       WHERE brc_b.id = #{id} AND brc_b.status = 1
-    ]]&gt;
-  &lt/select&gt;
-  &ltselect id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO"&gt;
+    ]]>
+  </select>
+  <select id="selectBroadcasterById" resultType="com.kjh.aps.domain.BroadcasterDTO">
     SELECT * FROM broadcaster WHERE id = #{param1}
-  &lt/select&gt;
-  &ltupdate id="updateBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO"&gt;
+  </select>
+  <update id="updateBoardWrite" parameterType="com.kjh.aps.domain.BoardDTO">
     UPDATE broadcaster_board SET ip = #{ip}, subject = #{subject}, content = #{content}, image_flag = #{image_flag}, media_flag = #{media_flag} WHERE (broadcaster_id = #{broadcaster_id}) AND id = #{id} AND user_id = #{user_id} AND status = 1
-  &lt/update&gt;
-&lt/mapper&gt;
-</pre>
+  </update>
+</maapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
