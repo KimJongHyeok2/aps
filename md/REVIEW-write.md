@@ -3,7 +3,7 @@
 <img src="https://user-images.githubusercontent.com/47962660/64944499-6eb5ed80-d8a9-11e9-96ea-e111b48ecd43.gif"/>
 
 ## Review(Client)
-<pre>
+```javascript
 function writeReview() {
   var rating = $("#rate").rateYo("option", "rating");
   var content = $("#comment").val();
@@ -65,13 +65,12 @@ function writeReview() {
     }
   }
 }
-</s:authorize>
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/community/review.jsp">review.jsp</a>
 </pre>
 ## CommunityController
-<pre>
+```java
 @Inject
 private CommunityService communityService;
   
@@ -101,12 +100,12 @@ public @ResponseBody String reviewWrite(CommentDTO dto, BindingResult result,
 		
   return resultMsg;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/controller/CommunityController.java">CommunityController.java</a>
 </pre>
 ## CommunityServiceImpl
-<pre>
+```java
 @Inject
 private CommunityDAO dao;
   
@@ -137,21 +136,21 @@ public String insertBroadcasterReview(CommentDTO dto) throws Exception { // ë°©ì
 		
   return result;
 }
-</pre>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/service/CommunityServiceImpl.java">CommunityServiceImpl.java</a>
 </pre>
 ## CommunityMapper
-<pre>
-&lt;mapper namespace="community"&gt;
-  &lt;select id="selectBroadcasterReviewCountByMap" resultType="Integer"&gt;
+```xml
+<mapper namespace="community">
+  <select id="selectBroadcasterReviewCountByMap" resultType="Integer">
     SELECT count(br.id) FROM (SELECT * FROM broadcaster_review WHERE broadcaster_id = #{broadcaster_id}) br WHERE DATE_FORMAT(br.register_date, '%Y-%m-%d') = DATE_FORMAT(#{today}, '%Y-%m-%d') AND (br.user_id = #{user_id} OR br.ip = #{ip}) 
-  &lt;/select&gt;
-  &lt;insert id="insertBroadcasterReview" parameterType="com.kjh.aps.domain.CommentDTO"&gt;
+  </select>
+  <insert id="insertBroadcasterReview" parameterType="com.kjh.aps.domain.CommentDTO">
     INSERT INTO broadcaster_review(broadcaster_id, user_id, ip, gp, content) VALUES(#{broadcaster_id}, #{user_id}, #{ip}, #{gp}, #{content})
-  &lt;/insert&gt;
-&lt;/mapper&gt;
-</pre>
+  </insert>
+</mapper>
+```
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/java/com/kjh/aps/mapper/CommunityDAO.xml">CommunityDAO.xml</a>
 </pre>
