@@ -27,6 +27,81 @@ function modifyCommentOk(data) {
 <pre>
 <a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/community/combine/combine_view.jsp">combine_view.jsp</a>
 </pre>
+## CommentModify(Client)
+```javascript
+function modifyCommentOk() {
+  var content = myEditor.getData();
+  var combineBoardId = "${comment.combine_board_id}";
+  var combineBoardCommentId = "${comment.id}";
+	
+  if(content == null || content.length == 0) {
+    modalToggle("#modal-type-1", "안내", "내용을 입력해주세요.");
+    return false;
+  } else {
+    if(content.length > 5000) {
+      modalToggle("#modal-type-1", "안내", "내용은 5000자 이하로 입력해주세요.");
+      return false;			
+    } else {
+      if("${comment.comment_type}" == "non") {
+        $.ajax({
+          url: "${pageContext.request.contextPath}/community/combine/comment/modifyOk",
+          type: "POST",
+          cache: false,
+          data: {
+            "combine_board_id" : combineBoardId,
+            "id" : combineBoardCommentId,
+            "nickname" : "${comment.nickname}",
+            "password" : "${comment.password}",
+            "content" : content,
+            "comment_type" : "${comment.comment_type}"
+          },
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+          },
+          success: function(data, status) {
+            if(status == "success") {
+              if(data == "Success") {
+                opener.modifyCommentOk(data);
+                window.close();
+              } else {
+                modalToggle("#modal-type-4", "오류", "알 수 없는 오류입니다.");
+              }
+            }
+          }
+        });
+      } else if("${comment.comment_type}" == "user") {
+        $.ajax({
+          url: "${pageContext.request.contextPath}/community/combine/comment/modifyOk",
+          type: "POST",
+          cache: false,
+          data: {
+            "combine_board_id" : combineBoardId,
+            "id" : combineBoardCommentId,
+            "content" : content,
+            "comment_type" : "${comment.comment_type}"
+          },
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+          },
+          success: function(data, status) {
+            if(status == "success") {
+              if(data == "Success") {
+                opener.modifyCommentOk(data);
+                window.close();
+              } else {
+                modalToggle("#modal-type-4", "오류", "알 수 없는 오류입니다.");
+              }
+            }
+          }
+        });
+      }
+    }
+  }
+}
+```
+<pre>
+<a href="https://github.com/KimJongHyeok2/aps/blob/master/APS/src/main/webapp/WEB-INF/views/community/combine/comment_modify.jsp">comment_modify.jsp</a>
+</pre>
 ## CommunityController
 ```java
 @Inject
