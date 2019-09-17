@@ -38,7 +38,7 @@
     </ul>
   </li>
   <li>
-    BJ별 게시판
+    BJ별 게시판(회원 전용)
     <ul>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/BOARD-write.md">등록</a></li>
       <li>
@@ -92,6 +92,44 @@
         </ul>
       </li>
       <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/REVIEW-live.md">실시간 평점 평균</a></li>
+    </ul>
+  </li>
+  <li>
+    통합 게시판(회원/비회원 모두 이용 가능)
+    <ul>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-write.md">등록</a></li>
+      <li>
+        <a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-list.md">목록</a>
+        <ul>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-search.md">검색</a></li>
+        </ul>
+      </li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-update.md">수정</a></li>
+      <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-delete.md">삭제</a></li>
+      <li>
+        <a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-view.md">상세보기</a>
+        <ul>
+          <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/COMBINE-recommend.md">추천/비추천<a></li>
+          <li>
+            댓글
+            <ul>
+              <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENT-write.md">등록</a></li>
+              <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENT-list.md">목록</a></li>
+              <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENT-update.md">수정</a></li>
+              <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENT-delete.md">삭제</a></li>
+              <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENT-recommend.md">추천/비추천</a></li>
+              <li>
+                답글
+                <ul>
+                  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENTREPLY-write.md">등록</a></li>
+                  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENTREPLY-list.md">목록</a></li>
+                  <li><a href="https://github.com/KimJongHyeok2/aps/blob/master/md/CBCOMMENTREPLY-delete.md">삭제</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li>
