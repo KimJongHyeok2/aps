@@ -587,7 +587,7 @@ public class CommunityController {
 		return resultView;
 	}
 	
-	// 통합 게시판 글의 댓글 삭제
+	// 통합 게시판 글의 댓글 
 	@PostMapping("/combine/comment/modifyOk")
 	public @ResponseBody String combineBoardWriteCommentModifyOk(CommentDTO dto, BindingResult result,
 			@RequestParam(value = "page", defaultValue = "1") int page,
