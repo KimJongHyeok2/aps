@@ -176,7 +176,6 @@ public class CommunityController {
 				map.put("pageBlock", String.valueOf(BOARD_PAGEBLOCK));
 				map.put("listType", listType);
 				map.put("order", String.valueOf(BOARD_POPULAR_ORDER));
-				map.put("pageBlock", String.valueOf(BOARD_PAGEBLOCK));
 
 				Map<String, Object> maps = communityService.selectSearchCombineBoardWriteListByMap(map);
 

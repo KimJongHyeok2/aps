@@ -1,0 +1,121 @@
+@charset "UTF-8";
+.content-wrapper {
+	display: flex;
+	align-items: center;
+}
+.content-wrapper .content-inner {
+	width: 100%;
+	max-width: 1000px;
+	margin: auto;
+}
+.content-wrapper .content-inner .content-inner-box {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .container {
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header {
+	padding-bottom: 10px;
+	border-bottom: 2px solid #EAEAEA;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info .name {
+	font-size: 20pt;
+	font-family: "나눔스퀘어";	
+}
+.content-wrapper .content-inner .content-inner-box .container .board-header .info .other .other-button {
+	padding: 5px;
+	border: 1px solid #2e6afd;
+	border-radius: 5px;
+	background-color: #2e6afd;
+	color: white;
+}
+.content-wrapper .content-inner .content-inner-box .container .content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.content-wrapper .content-inner .content-inner-box .container .content form {
+	width: 100%;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box {
+	max-width: 350px;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #D5D5D5;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .head i.modify {
+	vertical-align: middle;
+	margin-right: 5px;
+	padding: 10px 20px;
+	border: 1px solid #0545B1;
+	border-radius: 50%;
+	color: #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .head i.delete {
+	vertical-align: middle;
+	margin-right: 5px;
+	padding: 10px 15px;
+	border: 1px solid #F15F5F;
+	border-radius: 50%;
+	color: #F15F5F;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .head span {
+	font-family: "나눔스퀘어";
+	font-size: 20px;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .input {
+	margin: 10px 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .input input {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #D5D5D5;
+	outline: 0;
+	transition-property: border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .input input:focus {
+	border: 1px solid #0545B1;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .button {
+	display: flex;
+	justify-content: space-between;
+	margin: 0 -1px;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .button .btn {
+	padding: 0;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .button .btn button {
+	padding: 5px 10px;
+	border: 1px solid #D5D5D5;
+	background-color: white;
+	color: gray;
+	transition-property: color, border-color;
+	transition-duration: 0.5s;
+}
+.content-wrapper .content-inner .content-inner-box .container .content .confirm-box .button .btn button:hover {
+	border: 1px solid #0545B1;
+	color: #0545B1;
+}
+
+/* 통합 게시판 헤더 반응형 */
+@media(max-width:1000px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header {
+		margin: 0 10px;
+	}
+	.content-wrapper .content-inner .content-inner-box {
+		margin: 10px;
+	}
+}
+@media(max-width:575px) {
+	.content-wrapper .content-inner .content-inner-box .container .board-header .info .name {
+		font-size: 20px;
+	}
+}
