@@ -1,4 +1,5 @@
 ## Demo
+<h5>등록된 댓글을 최신/인기순으로 정렬할 수 있습니다.</h5>
 <img src="https://user-images.githubusercontent.com/47962660/65045372-9c7a5f80-d999-11e9-92a2-c8f8dbfba943.gif"/>
 
 ## CombineView(Client)
