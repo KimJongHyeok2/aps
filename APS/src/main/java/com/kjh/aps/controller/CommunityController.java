@@ -154,7 +154,7 @@ public class CommunityController {
 		return "community/combine/combine_list";
 	}
 	
-	//  게시판 글 검색
+	// 통합 게시판 글 검색
 	@GetMapping(value = "/combine", params = {"searchValue", "searchType"})
 	public String combine(String searchValue,
 			@RequestParam(value = "listType", defaultValue = "new") String listType,
@@ -440,7 +440,7 @@ public class CommunityController {
 		return "community/combine/combine_view";
 	}
 	
-	// 통합 게시판 글 댓글 추천
+	// 통합 게시판 글 추천
 	@PostMapping("/combine/recommend")
 	public @ResponseBody String combineBoardWriteRecommend(@RequestParam(value = "id", defaultValue = "0") int id,
 			 String type, HttpServletRequest request) {
