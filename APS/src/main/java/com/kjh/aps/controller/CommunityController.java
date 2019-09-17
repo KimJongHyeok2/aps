@@ -154,7 +154,7 @@ public class CommunityController {
 		return "community/combine/combine_list";
 	}
 	
-	// 방송인 커뮤니티 게시판 글 검색
+	//  게시판 글 검색
 	@GetMapping(value = "/combine", params = {"searchValue", "searchType"})
 	public String combine(String searchValue,
 			@RequestParam(value = "listType", defaultValue = "new") String listType,
