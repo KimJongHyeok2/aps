@@ -715,7 +715,7 @@ public class CommunityController {
 	}
 
 	
-	// 통합 게시판 글 댓글 작성
+	// 통합 게시판 글 댓글의 답글 작성
 	@PostMapping("/combine/commentReply/write")
 	public @ResponseBody String combineBoardWriteCommentReplyWrite(CommentReplyDTO dto, BindingResult result,
 			HttpServletRequest request) {
